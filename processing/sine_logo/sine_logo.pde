@@ -1,10 +1,11 @@
 Wave sine;
-
+float rec;
 void setup() {
   size(500, 500);
   background(255);
 
   sine = new Wave();
+  rec = sine.phase;
 }
 
 
@@ -14,7 +15,7 @@ void draw() {
   sine.show();
   sine.update();
 
-  if (frameCount < 95 && frameCount%5 == 0) {
+  if ((sine.phase < rec + 4 * PI) && frameCount%5 == 0) {
     screenshot();
   }
 }
