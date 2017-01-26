@@ -110,12 +110,12 @@ class eBackgroundClient {
   void display() {
     if ((millis() - startTime) > timeOffset && !maxTrig) {
       maxTimer.startTimer();
-      println("maxTimer trigger!");
+      // println("maxTimer trigger!");
       maxTrig = true;
     }
     if (maxTimer.state && (millis() - startTime) > (timeGap + timeOffset) && !minTrig ) {
-      println("minTimer trigger!");
-      println("time:" + millis());
+      // println("minTimer trigger!");
+      // println("time:" + millis());
       minTrig = true;
       minTimer.startTimer();
     }
@@ -146,20 +146,20 @@ class eBackgroundClient {
   }
 
   void trigger(float x, float y) {
-
+    println("background trigger!");
     xCenter = x;
     yCenter = y;
 
-    print("background dots:  ");
-    print("x : " + str(x));
-    print("  y : " + str(y) );
-    print("  time: " + millis() + "\n");
+    // print("background dots:  ");
+    // print("x : " + str(x));
+    // print("  y : " + str(y) );
+    // print("  time: " + millis() + "\n");
 
     //maxTimer.startTimer();
     minTrig = false;
     maxTrig = false;
     startTime = millis();
-    println("start time:" + millis());
+    // println("start time:" + millis());
   }
 
 }

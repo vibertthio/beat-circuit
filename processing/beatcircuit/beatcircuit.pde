@@ -10,6 +10,7 @@ float x_pressed, y_pressed;
 
 
 void setup() {
+
   background(bk);
   size(1200, 800);
 
@@ -21,9 +22,21 @@ void setup() {
 }
 
 void draw() {
+  // println(System.nanoTime());
   background(bk);
   back.display();
+
+  w.update();
   w.display();
+
+  //background
+  if(random(1) < 0.001) {
+    // back.trigger(mouseX, mouseY);
+  }
+
+  //frameRate
+  fill(255);
+  text( "frameRate: " + str(frameRate),10, 20);
 }
 
 
