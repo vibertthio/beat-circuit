@@ -13,7 +13,7 @@ class Wave {
 
   Wave() {}
 
-  void show() {
+  void display() {
     pushMatrix();
 
     translate(width/2, height/2);

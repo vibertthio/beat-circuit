@@ -12,7 +12,7 @@ void setup() {
 
 void draw() {
   background(255);
-  sine.show();
+  sine.display();
   sine.update();
 
   if ((sine.phase < rec + 4 * PI) && frameCount%5 == 0) {

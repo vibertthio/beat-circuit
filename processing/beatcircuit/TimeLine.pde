@@ -14,6 +14,12 @@ class TimeLine {
     state=false;
   }
 
+  TimeLine(int sec, boolean _loop) {
+    limit = sec;
+    loop = _loop;
+    state = _loop;
+  }
+
   float liner() {
     if (state == true) {
       elapsedTime = millis() - localtime;
@@ -57,7 +63,29 @@ class TimeLine {
     if(!breathState) {
       return pow(t, linerRate); }
     else {
-      return pow((t-1), linerRate); }
+      return pow((1-t), linerRate); }
+  }
+
+  float repeatBreathMovementEndless() {
+    if (state == true) {
+      //println("check!!!!");
+      elapsedTime = millis() - localtime;
+      if (elapsedTime>int(limit)) {
+        elapsedTime = int(limit);
+        if(repeatTime < 1 && breathState) {
+          state = false; }
+        else {
+          breathState = !breathState;
+          startTimer();
+        }
+      }
+    }
+
+    float t = float(elapsedTime)/limit;
+    if(!breathState) {
+      return pow(t, linerRate); }
+    else {
+      return pow((1-t), linerRate); }
   }
 
   void setLinerRate(float r) { linerRate = r; }
