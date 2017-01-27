@@ -1,12 +1,12 @@
 color bk = color(30, 30, 30);
 
-
-
 //self define class
 eBackgroundClient back;
 Wire w;
 float x_pressed, y_pressed;
 
+//state
+boolean newLine = false;
 
 
 void setup() {
@@ -18,7 +18,7 @@ void setup() {
   back = new eBackgroundClient();
 
   //test
-  w = new Wire(random(width), random(height),random(width), random(height));
+  w = new Wire(random(width), random(height), random(width), random(height), true);
 }
 
 void draw() {
@@ -43,11 +43,27 @@ void draw() {
 void mousePressed() {
   //test for background
   //back.trigger(mouseX, mouseY);
+  if (!newLine) {
+    w.mousePressed(mouseX, mouseY);
+  }
 
   x_pressed = mouseX;
   y_pressed = mouseY;
 }
 
 void mouseReleased() {
-  w = new Wire(x_pressed, y_pressed, mouseX, mouseY);
+  if (newLine) {
+    w = new Wire(x_pressed, y_pressed, mouseX, mouseY, false);
+  }
+}
+
+void keyPressed() {
+  if(key == 'n') {
+    newLine = true;
+  }
+}
+void keyReleased() {
+  if(key == 'n') {
+    newLine = false;
+  }
 }
