@@ -45,13 +45,11 @@ void mousePressed() {
   x_pressed = mouseX;
   y_pressed = mouseY;
 }
-
 void mouseReleased() {
   if (newLine) {
     w = new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false);
   }
 }
-
 void keyPressed() {
   if(key == 'n') {
     newLine = true;
