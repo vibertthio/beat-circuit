@@ -1,5 +1,5 @@
 class Wire {
-
+  //display paras
   float _strokeWeight = 2;
   color _strokeColor = color (1, 152, 117);
 
@@ -17,15 +17,12 @@ class Wire {
   float x_s, y_s, x_e, y_e;
   float angle, length;
 
-
   //state
   boolean loop = false;
 
-  Metro metro;
+  //time tracking objects
   TimeLine timerOfSequence;
   TimeLine timerOfEndPoint;
-
-
 
   // Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
   //   x_s = _x_s;
@@ -182,7 +179,6 @@ class Wire {
     currentBeat = 0;
     timerOfSequence.startTimer();
     triggerEndPoints();
-
   }
 
 
