@@ -74,7 +74,7 @@ class eBackgroundDot {
 
 }
 
-class eBackgroundClient {
+class BackgroundClient {
   eBackgroundDot[][] eBackgroundDots;
   int xNo = 34;
   int yNo = 20;
@@ -91,7 +91,7 @@ class eBackgroundClient {
   int timeOffset = 0;//600;
   int timeGap = 1500;
 
-  eBackgroundClient() {
+  BackgroundClient() {
     eBackgroundDots = new eBackgroundDot[xNo][yNo];
     maxTimer = new TimeLine(5000);
     minTimer = new TimeLine(4000);

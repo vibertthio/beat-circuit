@@ -1,17 +1,17 @@
 class Circuit {
-  ArrayList<Wire> wires;
+ArrayList<Wire> wires;
 
-  Circuit() {
-    wires = new ArrayList<Wire>();
-  }
+Circuit() {
+  wires = new ArrayList<Wire>();
+}
 
-  void update() {
-    
-  }
+void update() {
 
-  void display() {
+}
 
-  }
+void display() {
+
+}
 
 
 }

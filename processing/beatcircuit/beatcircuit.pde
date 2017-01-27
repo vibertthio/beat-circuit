@@ -1,7 +1,7 @@
 color bk = color(30, 30, 30);
 
 //self define class
-eBackgroundClient back;
+BackgroundClient back;
 SequenceWire w;
 float x_pressed, y_pressed;
 
@@ -30,7 +30,7 @@ void draw() {
 
   //background
   if(random(1) < 0.001) {
-    // back.trigger(mouseX, mouseY);
+          // back.trigger(mouseX, mouseY);
   }
   showfr();
 }
@@ -40,24 +40,24 @@ void mousePressed() {
   //test for background
   //back.trigger(mouseX, mouseY);
   if (!newLine) {
-    w.mousePressed(mouseX, mouseY);
+          w.mousePressed(mouseX, mouseY);
   }
   x_pressed = mouseX;
   y_pressed = mouseY;
 }
 void mouseReleased() {
   if (newLine) {
-    w = new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false);
+          w = new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false);
   }
 }
 void keyPressed() {
   if(key == 'n') {
-    newLine = true;
+          newLine = true;
   }
 }
 void keyReleased() {
   if(key == 'n') {
-    newLine = false;
+          newLine = false;
   }
 }
 
