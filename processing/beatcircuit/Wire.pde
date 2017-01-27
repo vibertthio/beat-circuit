@@ -59,7 +59,7 @@ class Wire {
     popMatrix();
   }
   void triggerEndPoints() {
-    println("tirgger end points!");
+    // println("tirgger end points!");
     timerOfEndPoint.startTimer();
   }
 

@@ -24,7 +24,7 @@ class SequenceWire extends Wire {
     currentPos = timerOfSequence.liner();
     if (currentBeat == numberOfBeats &&
         currentPos < float(1) / numberOfBeats) {
-      println("check");
+      // println("restart");
       currentBeat = 0;
     }
     // else if (currentPos > currentBeat/numberOfBeats ) {
@@ -38,9 +38,9 @@ class SequenceWire extends Wire {
         currentBar = currentBar + 1;
       }
       currentBeat = currentBeat + 1;
-      println("currentPos: " + currentPos);
-      println("currentBeat: " + currentBeat);
-      println("currentBar: " + currentBar);
+      // println("currentPos: " + currentPos);
+      // println("currentBeat: " + currentBeat);
+      // println("currentBar: " + currentBar);
     }
   }
 
