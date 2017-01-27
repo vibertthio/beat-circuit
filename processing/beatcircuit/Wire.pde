@@ -9,6 +9,8 @@ class Wire {
   float x_s, y_s, x_e, y_e;
   float angle, length;
 
+  //time line para
+  int timeUnit = 100;
 
   //time tracking objects
   TimeLine timerOfEndPoint;
@@ -25,13 +27,11 @@ class Wire {
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     timerOfEndPoint.setLinerRate(1);
     triggerEndPoints();
-
   }
 
 
   //main functions
-  void update() {
-  }
+  void update() {}
 
   void display() {
     mainWireDisplay();
@@ -64,10 +64,6 @@ class Wire {
   }
 
   //UI
-  void mousePressed(int mX, int mY) {
-    if (dist(mX, mY, x_s, y_s) < _nodeDiameter/2) {
-      triggerTimeNode();
-    }
-  }
+  void mousePressed(int mX, int mY) {}
 
 }

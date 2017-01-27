@@ -1,11 +1,12 @@
 class SequenceWire extends Wire {
   //time line para
-  int timeUnit = 100;
   int numberOfBeats = 32;
   int numberOfBars = 4;
   int beatsPerBar = numberOfBeats / numberOfBars;
-  float currentPos = 0;
 
+  float currentPos = 0; //0 ~ 1
+  float currentBar = 1; //1 ~ numberOfBars
+  float currentBeat = 1; //1 ~ numberOfBeats
   //state
   boolean loop = false;
 
@@ -104,6 +105,13 @@ class SequenceWire extends Wire {
     }
 
     popMatrix();
+  }
+
+  //UI
+  void mousePressed(int mX, int mY) {
+    if (dist(mX, mY, x_s, y_s) < _nodeDiameter/2) {
+      triggerTimeNode();
+    }
   }
 
 
