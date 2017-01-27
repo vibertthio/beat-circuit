@@ -24,7 +24,7 @@ void setup() {
                               random(width), random(height), true) );
 
   metro = new Metro(true, 300);
-  fc = metro.frameCount();
+  // fc = metro.frameCount();
 
 }
 
@@ -45,14 +45,14 @@ void draw() {
 
   //debug
   showfr();
-  if (fc < metro.frameCount()) {
-    fc = metro.frameCount();
-    wires.add( new SequenceWire(random(width), random(height),
-                                random(width), random(height), true) );
-  println("-------------------");
-  println("number of wires: " + wires.size());
-  println("frame rate: " + frameRate);
-  }
+  // if (fc < metro.frameCount()) {
+  //   fc = metro.frameCount();
+  //   wires.add( new SequenceWire(random(width), random(height),
+  //                               random(width), random(height), true) );
+  // println("-------------------");
+  // println("number of wires: " + wires.size());
+  // println("frame rate: " + frameRate);
+  // }
 }
 
 void mousePressed() {
@@ -71,8 +71,10 @@ void mousePressed() {
 }
 void mouseReleased() {
   if (newLine) {
-    wires.add( new SequenceWire(x_pressed, y_pressed,
-                                mouseX, mouseY, true) );
+    // wires.add( new SequenceWire(x_pressed, y_pressed,
+    //                             mouseX, mouseY, true) );
+    wires.add( new Wire(x_pressed, y_pressed,
+                                mouseX, mouseY) );
   }
 }
 void keyPressed() {

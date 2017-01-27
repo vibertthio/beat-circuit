@@ -7,6 +7,7 @@ class SequenceWire extends Wire {
   float currentPos = 0; //0 ~ 1
   float currentBar = 1; //1 ~ numberOfBars
   float currentBeat = 1; //1 ~ numberOfBeats
+
   //state
   boolean loop = false;
 
@@ -15,12 +16,13 @@ class SequenceWire extends Wire {
 
   SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l) {
     super(_x_s, _y_s, _x_e, _y_e);
+    loop = _l;
     timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
-    timerOfSequence.setLinerRate(1);
     timerOfSequence.startTimer();
   }
 
   void update() {
+    super.update();
     currentPos = timerOfSequence.liner();
     if (currentBeat == numberOfBeats &&
         currentPos < float(1) / numberOfBeats) {

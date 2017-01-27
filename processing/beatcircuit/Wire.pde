@@ -8,12 +8,18 @@ class Wire {
   //pos and angle
   float x_s, y_s, x_e, y_e;
   float angle, length;
+  float finalAngle;
+
+
+  //state
+  boolean angleAdjusting = true;
 
   //time line para
   int timeUnit = 100;
 
   //time tracking objects
   TimeLine timerOfEndPoint;
+  TimeLine timerOfAngleAdjusting;
 
   Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
     x_s = _x_s;
@@ -23,19 +29,39 @@ class Wire {
 
     angle = atan2(y_e - y_s, x_e - x_s);
     length = dist(x_s, y_s, x_e, y_e);
+    finalAngle = (PI / 2) * round(angle * 2 / PI);
+    println("angle: " + angle);
+    println("final angle: " + finalAngle);
 
     timerOfEndPoint = new TimeLine(timeUnit / 2);
-    timerOfEndPoint.setLinerRate(1);
     triggerEndPoints();
+
+    // timerOfAngleAdjusting = new TimeLine(timeUnit * 4);
+    // timerOfAngleAdjusting.startTimer();
   }
 
 
   //main functions
-  void update() {}
-
+  void update() {
+    if (angleAdjusting) {
+      adjustAngle();
+    }
+  }
   void display() {
     mainWireDisplay();
     endPointsDisplay();
+  }
+
+  //rotate the angle
+  float angleAdjustingRate = 0.1;
+  void adjustAngle() {
+    angle = angle + angleAdjustingRate * (finalAngle - angle);
+    x_e = x_s + length * cos(angle);
+    y_e = y_s + length * sin(angle);
+    if (abs(angle - finalAngle) < 0.001) {
+      angle = finalAngle;
+      angleAdjusting = false;
+    }
   }
 
   //display functions
@@ -47,7 +73,6 @@ class Wire {
     line(x_s, y_s, x_e, y_e);
     popMatrix();
   }
-
   void endPointsDisplay() {
     pushMatrix();
     stroke(_strokeColor);
