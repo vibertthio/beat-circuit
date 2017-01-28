@@ -33,8 +33,8 @@ class Wire {
     angle = atan2(y_e - y_s, x_e - x_s);
     length = dist(x_s, y_s, x_e, y_e);
     finalAngle = (PI / 2) * round(angle * 2 / PI);
-    println("angle: " + angle);
-    println("final angle: " + finalAngle);
+    // println("angle: " + angle);
+    // println("final angle: " + finalAngle);
 
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     triggerEndPoints();
@@ -86,6 +86,9 @@ class Wire {
     fill(bk);
     float dia = _nodeDiameter * (1 + timerOfEndPoint.repeatBreathMovement() * 0.3);
     ellipse(x_s, y_s, dia, dia);
+    // if (next.isEmpty()) {
+    //   ellipse(x_e, y_e, dia, dia);
+    // }
     ellipse(x_e, y_e, dia, dia);
     popMatrix();
   }
@@ -101,7 +104,7 @@ class Wire {
   void addPrev(Wire w) {
     prev.add(w);
   }
-
+  void trigger() {}
 
   //UI
   void mousePressed(int mX, int mY) {}

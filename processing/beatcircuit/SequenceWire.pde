@@ -10,7 +10,7 @@ class SequenceWire extends Wire {
 
   //state
   boolean loop = false;
-  // boolean finishConducting = false;
+  boolean finishTriggerNext = false;
 
   //time tracking objects
   TimeLine timerOfSequence;
@@ -21,14 +21,27 @@ class SequenceWire extends Wire {
     timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
     timerOfSequence.startTimer();
   }
+  SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l, boolean _s) {
+    super(_x_s, _y_s, _x_e, _y_e);
+    loop = _l;
+    timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
+    if (_s) { timerOfSequence.startTimer(); }
+  }
 
   void update() {
     super.update();
     currentPos = timerOfSequence.liner();
-    if (currentBeat == numberOfBeats &&
-        currentPos < float(1) / numberOfBeats) {
-      println("restart");
-      currentBeat = 0;
+    if (currentBeat == numberOfBeats) {
+      if (!timerOfSequence.state) {
+        if (!finishTriggerNext) {
+          triggerNextWires();
+          finishTriggerNext = true;
+        }
+      }
+      else if (currentPos < float(1) / numberOfBeats) {
+        println("restart");
+        currentBeat = 0;
+      }
     }
 
     if (currentPos > currentBeat/numberOfBeats ) {
@@ -54,7 +67,7 @@ class SequenceWire extends Wire {
 
   //time node
   void timeNodeDisplay() {
-    if (currentPos < 1) {
+    if (currentPos < 1 && timerOfSequence.state) {
       pushMatrix();
       stroke(_strokeColor);
       strokeWeight(_strokeWeight);
@@ -66,11 +79,20 @@ class SequenceWire extends Wire {
       popMatrix();
     }
   }
-  void triggerTimeNode() {
+  void trigger() {
     currentBar = 0;
     currentBeat = 0;
     timerOfSequence.startTimer();
     triggerEndPoints();
+    finishTriggerNext = false;
+  }
+
+  void triggerNextWires() {
+    // println("trigger Next!!!");
+    for (int i=0; i<next.size(); i++) {
+      Wire w = next.get(i);
+      w.trigger();
+    }
   }
 
   //bar sign
@@ -112,9 +134,7 @@ class SequenceWire extends Wire {
   //UI
   void mousePressed(int mX, int mY) {
     if (dist(mX, mY, x_s, y_s) < _nodeDiameter/2) {
-      triggerTimeNode();
+      trigger();
     }
   }
-
-
 }

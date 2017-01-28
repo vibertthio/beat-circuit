@@ -7,7 +7,6 @@ ArrayList<Wire> wires;
 Circuit circuit;
 float x_pressed, y_pressed;
 
-
 //state
 boolean newLine = false;
 
@@ -50,7 +49,6 @@ void draw() {
   showfr();
   // debbug();
 }
-
 
 void mousePressed() {
   //test for background

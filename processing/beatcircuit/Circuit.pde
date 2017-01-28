@@ -16,34 +16,36 @@ class Circuit {
     if (x1 < x2) {
       if (y1 < y2) {
         wires.add(new SequenceWire(x1, y1, x2, y1, false));
-        wires.add(new SequenceWire(x2, y1, x2, y2, false));
-        wires.add(new SequenceWire(x2, y2, x1, y2, false));
-        wires.add(new SequenceWire(x1, y2, x1, y1, false));
+        wires.add(new SequenceWire(x2, y1, x2, y2, false, false));
+        wires.add(new SequenceWire(x2, y2, x1, y2, false, false));
+        wires.add(new SequenceWire(x1, y2, x1, y1, false, false));
       }
       else {
         wires.add(new SequenceWire(x1, y1, x1, y2, false));
-        wires.add(new SequenceWire(x1, y2, x2, y2, false));
-        wires.add(new SequenceWire(x2, y2, x2, y1, false));
-        wires.add(new SequenceWire(x2, y1, x1, y1, false));
+        wires.add(new SequenceWire(x1, y2, x2, y2, false, false));
+        wires.add(new SequenceWire(x2, y2, x2, y1, false, false));
+        wires.add(new SequenceWire(x2, y1, x1, y1, false, false));
       }
     }
     else {
       if (y1 < y2) {
         wires.add(new SequenceWire(x1, y1, x1, y2, false));
-        wires.add(new SequenceWire(x1, y2, x2, y2, false));
-        wires.add(new SequenceWire(x2, y2, x2, y1, false));
-        wires.add(new SequenceWire(x2, y1, x1, y1, false));
+        wires.add(new SequenceWire(x1, y2, x2, y2, false, false));
+        wires.add(new SequenceWire(x2, y2, x2, y1, false, false));
+        wires.add(new SequenceWire(x2, y1, x1, y1, false, false));
       }
       else {
-        wires.add(new SequenceWire(x1, y1, x2, y1, false));
-        wires.add(new SequenceWire(x2, y1, x2, y2, false));
-        wires.add(new SequenceWire(x2, y2, x1, y2, false));
-        wires.add(new SequenceWire(x1, y2, x1, y1, false));
+        wires.add(new SequenceWire(x1, y1, x2, y1, false, false));
+        wires.add(new SequenceWire(x2, y1, x2, y2, false, false));
+        wires.add(new SequenceWire(x2, y2, x1, y2, false, false));
+        wires.add(new SequenceWire(x1, y2, x1, y1, false, false));
       }
     }
 
-    
-
+    wires.get(0).addNext(wires.get(1));
+    wires.get(1).addNext(wires.get(2));
+    wires.get(2).addNext(wires.get(3));
+    wires.get(3).addNext(wires.get(0));
 
   }
 
