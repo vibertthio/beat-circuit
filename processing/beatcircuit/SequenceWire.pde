@@ -10,6 +10,7 @@ class SequenceWire extends Wire {
 
   //state
   boolean loop = false;
+  // boolean finishConducting = false;
 
   //time tracking objects
   TimeLine timerOfSequence;
@@ -26,10 +27,10 @@ class SequenceWire extends Wire {
     currentPos = timerOfSequence.liner();
     if (currentBeat == numberOfBeats &&
         currentPos < float(1) / numberOfBeats) {
-      // println("restart");
+      println("restart");
       currentBeat = 0;
     }
-    // else if (currentPos > currentBeat/numberOfBeats ) {
+
     if (currentPos > currentBeat/numberOfBeats ) {
       if (currentBeat % beatsPerBar == 0) {
         triggerEndPoints();
@@ -45,7 +46,6 @@ class SequenceWire extends Wire {
       // println("currentBar: " + currentBar);
     }
   }
-
   void display() {
     super.display();
     barSignsDisplay();
@@ -115,7 +115,6 @@ class SequenceWire extends Wire {
       triggerTimeNode();
     }
   }
-
 
 
 }

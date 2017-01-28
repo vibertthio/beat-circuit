@@ -1,10 +1,12 @@
-color bk = color(30, 30, 30);
+//constant
+final color bk = color(30, 30, 30);
+PFont font;
 
-//self define class
 BackgroundClient back;
-// SequenceWire w;
 ArrayList<Wire> wires;
+Circuit circuit;
 float x_pressed, y_pressed;
+
 
 //state
 boolean newLine = false;
@@ -16,6 +18,7 @@ void setup() {
   size(1200, 800, P2D);
   background(bk);
 
+
   //self define class
   back = new BackgroundClient();
 
@@ -24,7 +27,9 @@ void setup() {
                               random(width), random(height), true) );
 
   metro = new Metro(true, 300);
-  // fc = metro.frameCount();
+  fc = metro.frameCount();
+  font = createFont("Courier", 12);
+  textFont(font);
 
 }
 
@@ -38,22 +43,14 @@ void draw() {
     w.display();
   }
 
-  //background
-  // if(random(1) < 0.001) {
-  //   back.trigger(mouseX, mouseY);
-  // }
+  if (circuit != null) {
+    circuit.display();
+  }
 
-  //debug
   showfr();
-  // if (fc < metro.frameCount()) {
-  //   fc = metro.frameCount();
-  //   wires.add( new SequenceWire(random(width), random(height),
-  //                               random(width), random(height), true) );
-  // println("-------------------");
-  // println("number of wires: " + wires.size());
-  // println("frame rate: " + frameRate);
-  // }
+  // debbug();
 }
+
 
 void mousePressed() {
   //test for background
@@ -73,8 +70,10 @@ void mouseReleased() {
   if (newLine) {
     // wires.add( new SequenceWire(x_pressed, y_pressed,
     //                             mouseX, mouseY, true) );
-    wires.add( new Wire(x_pressed, y_pressed,
-                                mouseX, mouseY) );
+    // wires.add( new Wire(x_pressed, y_pressed,
+    //                             mouseX, mouseY) );
+    circuit = new Circuit(x_pressed, y_pressed,
+                          mouseX, mouseY);
   }
 }
 void keyPressed() {
@@ -95,4 +94,18 @@ void keyReleased() {
 void showfr() {
   fill(255);
   text( "frameRate: " + str(frameRate),10, 20);
+}
+void debbug() {
+  if(random(1) < 0.001) {
+    back.trigger(mouseX, mouseY);
+  }
+
+  if (fc < metro.frameCount()) {
+    fc = metro.frameCount();
+    wires.add( new SequenceWire(random(width), random(height),
+                                random(width), random(height), true) );
+  println("-------------------");
+  println("number of wires: " + wires.size());
+  println("frame rate: " + frameRate);
+  }
 }

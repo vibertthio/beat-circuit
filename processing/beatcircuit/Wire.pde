@@ -10,6 +10,9 @@ class Wire {
   float angle, length;
   float finalAngle;
 
+  //related wires
+  ArrayList<Wire> prev;
+  ArrayList<Wire> next;
 
   //state
   boolean angleAdjusting = true;
@@ -38,6 +41,9 @@ class Wire {
 
     // timerOfAngleAdjusting = new TimeLine(timeUnit * 4);
     // timerOfAngleAdjusting.startTimer();
+
+    prev = new ArrayList<Wire>();
+    next = new ArrayList<Wire>();
   }
 
 
@@ -87,6 +93,15 @@ class Wire {
     // println("tirgger end points!");
     timerOfEndPoint.startTimer();
   }
+
+  //related wires functions
+  void addNext(Wire w) {
+    next.add(w);
+  }
+  void addPrev(Wire w) {
+    prev.add(w);
+  }
+
 
   //UI
   void mousePressed(int mX, int mY) {}
