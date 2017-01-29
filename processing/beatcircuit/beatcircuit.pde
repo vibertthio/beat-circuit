@@ -55,7 +55,7 @@ void draw() {
 
 void mousePressed() {
   //test for background
-  //back.trigger(mouseX, mouseY);
+  back.trigger(mouseX, mouseY);
   if (newLine) {
 
   }
@@ -71,6 +71,8 @@ void mousePressed() {
 }
 void mouseReleased() {
   if (newLine) {
+    // wires.add( new SequenceWire(x_pressed, y_pressed,
+    //                             mouseX, mouseY, false, false) );
     wires.add( new SequenceWire(x_pressed, y_pressed,
                                 mouseX, mouseY, true) );
     // wires.add( new Wire(x_pressed, y_pressed,

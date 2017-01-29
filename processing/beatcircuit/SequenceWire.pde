@@ -39,7 +39,7 @@ class SequenceWire extends Wire {
         }
       }
       else if (currentPos < float(1) / numberOfBeats) {
-        println("restart");
+        // println("restart");
         currentBeat = 0;
       }
     }
@@ -86,7 +86,6 @@ class SequenceWire extends Wire {
     triggerEndPoints();
     finishTriggerNext = false;
   }
-
   void triggerNextWires() {
     // println("trigger Next!!!");
     for (int i=0; i<next.size(); i++) {
@@ -119,7 +118,9 @@ class SequenceWire extends Wire {
       if (i % beatsPerBar == 0) {
         stroke(_barSignColor);
         strokeWeight(_strokeWeight * _strokeWeightRatioOfBarSign);
-        line(d*i, _barSignSize, d*i, -_barSignSize);
+        // line(d*i, _barSignSize, d*i, -_barSignSize);
+        line(d*i, 0, d*i - 5, _barSignSize);
+        line(d*i, 0, d*i - 5, -_barSignSize);
       }
       else {
         // line(d*i, _barSignSize/2, d*i, -_barSignSize/2);

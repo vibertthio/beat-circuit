@@ -2,7 +2,7 @@ class Circuit {
   ArrayList<Wire> wires;
   float x1, y1, x2, y2;
 
-
+  Circuit() {}
   Circuit(float _x1, float _y1, float _x2, float _y2) {
     wires = new ArrayList<Wire>();
     // x1 = min(_x1, _x2);

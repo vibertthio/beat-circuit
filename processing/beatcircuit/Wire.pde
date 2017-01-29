@@ -8,7 +8,7 @@ class Wire {
   //pos and angle
   float x_s, y_s, x_e, y_e;
   float angle, length;
-  float finalAngle;
+  float finalAngle, finalLength;
   float angleUnit = PI / 4;
 
   //related wires
@@ -17,6 +17,7 @@ class Wire {
 
   //state
   boolean angleAdjusting = true;
+  boolean lengthAdjusting = true;
   boolean mousePointStartSensed = false;
   boolean mousePointEndSensed = false;
   boolean mousePointStartPressed = false;
@@ -32,6 +33,8 @@ class Wire {
   Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
     updatePos(_x_s, _y_s, _x_e, _y_e);
     finalAngle = angleUnit * round(angle / angleUnit);
+    length = 0;
+    finalLength = dist(_x_s, _y_s, _x_e, _y_e);
     // println("angle: " + angle);
     // println("final angle: " + finalAngle);
 
@@ -47,7 +50,10 @@ class Wire {
 
   //main functions
   void update() {
-    if (angleAdjusting) {
+    if (lengthAdjusting) {
+      adjustLength();
+    }
+    else if (angleAdjusting) {
       adjustAngle();
     }
 
@@ -58,14 +64,27 @@ class Wire {
   }
 
   //rotate the angle
-  float angleAdjustingRate = 0.1;
+  float adjustingRate = 0.2;
+  void updateAngle() {
+    angleAdjusting = true;
+    finalAngle = angleUnit * round(angle / angleUnit);
+  }
   void adjustAngle() {
-    angle = angle + angleAdjustingRate * (finalAngle - angle);
+    angle = angle + adjustingRate * (finalAngle - angle);
     x_e = x_s + length * cos(angle);
     y_e = y_s + length * sin(angle);
     if (abs(angle - finalAngle) < 0.001) {
       angle = finalAngle;
       angleAdjusting = false;
+    }
+  }
+  void adjustLength() {
+    length = length + adjustingRate * (finalLength - length);
+    x_e = x_s + length * cos(angle);
+    y_e = y_s + length * sin(angle);
+    if (abs(length - finalLength) < 1) {
+      length = finalLength;
+      lengthAdjusting = false;
     }
   }
   void updatePos(float _x_s, float _y_s, float _x_e, float _y_e) {
@@ -75,6 +94,12 @@ class Wire {
     y_e = _y_e;
     angle = atan2(y_e - y_s, x_e - x_s);
     length = dist(x_s, y_s, x_e, y_e);
+  }
+  void shiftPos(float _x_s, float _y_s) {
+    x_s = _x_s;
+    y_s = _y_s;
+    x_e = x_s + length * cos(angle);
+    y_e = y_s + length * sin(angle);
   }
 
   //display functions
@@ -139,12 +164,16 @@ class Wire {
 
   }
   void mouseReleased(int mX, int mY) {
+    if (mousePointEndPressed) {
+      updateAngle();
+    }
     mousePointStartPressed = false;
     mousePointEndPressed = false;
   }
   void mouseDragged(int mX, int mY) {
     if (mousePointStartPressed) {
-      updatePos(mX, mY, x_e, y_e);
+      // updatePos(mX, mY, x_e, y_e);
+      shiftPos(mX, mY);
     }
     if (mousePointEndPressed) {
       updatePos(x_s, y_s, mX, mY);
