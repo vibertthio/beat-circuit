@@ -1,8 +1,12 @@
 class SequenceWire extends Wire {
   //time line para
-  int numberOfBeats = 32;
+  // int numberOfBeats = 32;
+  // int numberOfBars = 4;
+  // int beatsPerBar = numberOfBeats / numberOfBars;
   int numberOfBars = 4;
-  int beatsPerBar = numberOfBeats / numberOfBars;
+  int beatsPerBar = 8;
+  int numberOfBeats = beatsPerBar * numberOfBars;
+
 
   float currentPos = 0; //0 ~ 1
   float currentBar = 1; //1 ~ numberOfBars
@@ -10,81 +14,83 @@ class SequenceWire extends Wire {
 
   //state
   boolean loop = false;
-  boolean finishTriggerNext = false;
+  // boolean finishTriggerNext = false;
 
   //time tracking objects
-  TimeLine timerOfSequence;
+  Node node;
+  // TimeLine timerOfSequence;
+
 
   SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l) {
     super(_x_s, _y_s, _x_e, _y_e);
     loop = _l;
-    timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
-    timerOfSequence.startTimer();
+    node = new Node(this);
+    // timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
+    // timerOfSequence.startTimer();
   }
   SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l, boolean _s) {
     super(_x_s, _y_s, _x_e, _y_e);
     loop = _l;
-    timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
-    if (_s) { timerOfSequence.startTimer(); }
+    node = new Node(this);
+    // timerOfSequence = new TimeLine(timeUnit * numberOfBeats, _l);
+    // if (_s) { timerOfSequence.startTimer(); }
   }
 
   void update() {
     super.update();
-    currentPos = timerOfSequence.liner();
-    if (currentBeat == numberOfBeats) {
-      if (!timerOfSequence.state) {
-        if (!finishTriggerNext) {
-          triggerNextWires();
-          finishTriggerNext = true;
-        }
-      }
-      else if (currentPos < float(1) / numberOfBeats) {
-        // println("restart");
-        currentBeat = 0;
-      }
-    }
-
-    if (currentPos > currentBeat/numberOfBeats ) {
-      if (currentBeat % beatsPerBar == 0) {
-        triggerEndPoints();
-
-        if (currentBar == numberOfBars) {
-          currentBar = 0;
-        }
-        currentBar = currentBar + 1;
-      }
-      currentBeat = currentBeat + 1;
-      // println("currentPos: " + currentPos);
-      // println("currentBeat: " + currentBeat);
-      // println("currentBar: " + currentBar);
-    }
+    node.update();
+    // currentPos = timerOfSequence.liner();
+    // if (currentBeat == numberOfBeats) {
+    //   if (!timerOfSequence.state) {
+    //     if (!finishTriggerNext) {
+    //       triggerNextWires();
+    //       finishTriggerNext = true;
+    //     }
+    //   }
+    //   else if (currentPos < float(1) / numberOfBeats) {
+    //     // println("restart");
+    //     currentBeat = 0;
+    //   }
+    // }
+    //
+    // if (currentPos > currentBeat/numberOfBeats ) {
+    //   if (currentBeat % beatsPerBar == 0) {
+    //     triggerEndPoints();
+    //
+    //     if (currentBar == numberOfBars) {
+    //       currentBar = 0;
+    //     }
+    //     currentBar = currentBar + 1;
+    //   }
+    //   currentBeat = currentBeat + 1;
+    //   // println("currentPos: " + currentPos);
+    //   // println("currentBeat: " + currentBeat);
+    //   // println("currentBar: " + currentBar);
+    // }
   }
   void display() {
     super.display();
     barSignsDisplay();
-    timeNodeDisplay();
+    // timeNodeDisplay();
+    node.display();
   }
 
   //time node
-  void timeNodeDisplay() {
-    if (currentPos < 1 && timerOfSequence.state) {
-      pushMatrix();
-      stroke(_strokeColor);
-      strokeWeight(_strokeWeight);
-      noStroke();
-      fill(_nodeColor);
-      float x_t = map(currentPos, 0, 1, x_s, x_e);
-      float y_t = map(currentPos, 0, 1, y_s, y_e);
-      ellipse(x_t, y_t, _nodeDiameter, _nodeDiameter);
-      popMatrix();
-    }
-  }
+  // void timeNodeDisplay() {
+  //   if (currentPos < 1 && timerOfSequence.state) {
+  //     pushMatrix();
+  //     stroke(_strokeColor);
+  //     strokeWeight(_strokeWeight);
+  //     noStroke();
+  //     fill(_nodeColor);
+  //     float x_t = map(currentPos, 0, 1, x_s, x_e);
+  //     float y_t = map(currentPos, 0, 1, y_s, y_e);
+  //     ellipse(x_t, y_t, _nodeDiameter, _nodeDiameter);
+  //     popMatrix();
+  //   }
+  // }
   void trigger() {
-    currentBar = 0;
-    currentBeat = 0;
-    timerOfSequence.startTimer();
-    triggerEndPoints();
-    finishTriggerNext = false;
+    node.trigger();
   }
   void triggerNextWires() {
     // println("trigger Next!!!");
