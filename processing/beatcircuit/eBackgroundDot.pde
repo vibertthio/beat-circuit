@@ -146,7 +146,7 @@ class BackgroundClient {
   }
 
   void trigger(float x, float y) {
-    println("background trigger!");
+    // println("background trigger!");
     xCenter = x;
     yCenter = y;
 

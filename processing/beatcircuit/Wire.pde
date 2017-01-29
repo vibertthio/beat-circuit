@@ -179,9 +179,18 @@ class Wire {
       updatePos(x_s, y_s, mX, mY);
     }
   }
-  void mouseSensed(int mX, int mY) {
+  int mouseSensed(int mX, int mY) {
     mousePointStartSensed = (dist(mX, mY, x_s, y_s) < _nodeDiameter / 2)? true:false;
     mousePointEndSensed = (dist(mX, mY, x_e, y_e) < _nodeDiameter / 2)? true:false;
+    if (mousePointStartSensed) {
+      return 1;
+    }
+    else if (mousePointEndSensed) {
+      return 2;
+    }
+    else {
+      return 0;
+    }
   }
 
 }

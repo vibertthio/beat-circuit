@@ -2,9 +2,17 @@ class Circuit {
   ArrayList<Wire> wires;
   float x1, y1, x2, y2;
 
-  Circuit() {}
-  Circuit(float _x1, float _y1, float _x2, float _y2) {
+
+  void init() {
     wires = new ArrayList<Wire>();
+  }
+
+  Circuit() {
+    init();
+  }
+  Circuit(float _x1, float _y1, float _x2, float _y2) {
+    init();
+    // wires = new ArrayList<Wire>();
     // x1 = min(_x1, _x2);
     // x2 = max(_x1, _x2);
     // y1 = min(_y1, _y2);
@@ -59,10 +67,54 @@ class Circuit {
     }
   }
 
+  void mouseReleased(int mX, int mY) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      w.mouseReleased(mX, mY);
+    }
+  }
+  void mouseDragged(int mX, int mY) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      w.mouseDragged(mX, mY);
+    }
+  }
+  void mousePressed(int mX, int mY) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      w.mousePressed(mX, mY);
+    }
+  }
   void mouseSensed(int mX, int mY) {
-    for (int i=0; i<wires.size(); i++) {
+    for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       w.mouseSensed(mX, mY);
     }
+  }
+
+  void addWire(float x_s, float y_s, float x_e, float y_e) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      if (w.mouseSensed(int(x_s), int(y_s)) == 2) {
+        println("!!!!");
+        Wire w_new = new SequenceWire(w.x_e, w.y_e, x_e, y_e, false, false);
+        w.addNext(w_new);
+        w_new.addPrev(w);
+        wires.add(w_new);
+        return;
+      }
+    }
+
+    wires.add(new SequenceWire(x_s, y_s, x_e, y_e, false, false));
+    // wires.add(new Wire(x_s, y_s, x_e, y_e));
+
+    // wires.add(
+    //   connected?
+    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false, false):
+    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, true)
+    // );
+  }
+  void clearWires() {
+    wires.clear();
   }
 }

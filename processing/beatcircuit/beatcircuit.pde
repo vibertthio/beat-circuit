@@ -3,8 +3,8 @@ final color bk = color(30, 30, 30);
 PFont font;
 
 BackgroundClient back;
-ArrayList<Wire> wires;
 Circuit circuit;
+Circuit cc;
 float x_pressed, y_pressed;
 
 //state
@@ -21,10 +21,7 @@ void setup() {
 
   //self define class
   back = new BackgroundClient();
-
-  wires = new ArrayList<Wire>();
-  wires.add( new SequenceWire(random(width), random(height),
-                              random(width), random(height), true) );
+  cc = new Circuit();
 
   metro = new Metro(true, 2000);
   fc = metro.frameCount();
@@ -37,12 +34,8 @@ void draw() {
   background(bk);
   back.display();
 
-  for (int i=0; i<wires.size(); i++) {
-    Wire w = wires.get(i);
-    w.mouseSensed(mouseX, mouseY);
-    w.update();
-    w.display();
-  }
+  cc.mouseSensed(mouseX, mouseY);
+  cc.display();
 
   if (circuit != null) {
     circuit.mouseSensed(mouseX, mouseY);
@@ -56,45 +49,33 @@ void draw() {
 void mousePressed() {
   //test for background
   back.trigger(mouseX, mouseY);
-  if (newLine) {
-
+  if (newLine || newCircuit) {
+    x_pressed = mouseX;
+    y_pressed = mouseY;
   }
   else {
-    for (int i=0; i<wires.size(); i++) {
-      Wire w = wires.get(i);
-      w.mousePressed(mouseX, mouseY);
-    }
+    cc.mousePressed(mouseX, mouseY);
   }
-
-  x_pressed = mouseX;
-  y_pressed = mouseY;
 }
 void mouseReleased() {
   if (newLine) {
-    // wires.add( new SequenceWire(x_pressed, y_pressed,
-    //                             mouseX, mouseY, false, false) );
-    wires.add( new SequenceWire(x_pressed, y_pressed,
-                                mouseX, mouseY, true) );
     // wires.add( new Wire(x_pressed, y_pressed,
     //                             mouseX, mouseY) );
+    // wires.add( new SequenceWire(x_pressed, y_pressed,
+    //                             mouseX, mouseY, false, false) );
+    cc.addWire( x_pressed, y_pressed, mouseX, mouseY);
   }
   else if (newCircuit) {
     circuit = new Circuit(x_pressed, y_pressed,
     mouseX, mouseY);
   }
   else {
-    for (int i=0; i<wires.size(); i++) {
-      Wire w = wires.get(i);
-      w.mouseReleased(mouseX, mouseY);
-    }
+    cc.mouseReleased(mouseX, mouseY);
   }
 }
 void mouseDragged() {
   if (!newLine && !newCircuit) {
-    for (int i=0; i<wires.size(); i++) {
-      Wire w = wires.get(i);
-      w.mouseDragged(mouseX, mouseY);
-    }
+    cc.mouseDragged(mouseX, mouseY);
   }
 }
 void keyPressed() {
@@ -105,7 +86,8 @@ void keyPressed() {
     newCircuit = true;
   }
   if( key == ' ') {
-    wires.clear();
+    cc.clearWires();
+    circuit = null;
   }
 }
 void keyReleased() {
@@ -129,10 +111,10 @@ void debbug() {
 
   if (fc < metro.frameCount()) {
     fc = metro.frameCount();
-    wires.add( new SequenceWire(random(width), random(height),
-                                random(width), random(height), true) );
+    cc.addWire( random(width), random(height),
+                random(width), random(height));
   println("-------------------");
-  println("number of wires: " + wires.size());
+  println("number of wires: " + cc.wires.size());
   println("frame rate: " + frameRate);
   }
 }
