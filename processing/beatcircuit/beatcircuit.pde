@@ -5,6 +5,7 @@ PFont font;
 BackgroundClient back;
 ArrayList<Wire> wires;
 Circuit circuit;
+Circuit c;
 float x_pressed, y_pressed;
 
 //state
@@ -71,10 +72,10 @@ void mousePressed() {
 }
 void mouseReleased() {
   if (newLine) {
-    // wires.add( new SequenceWire(x_pressed, y_pressed,
-    //                             mouseX, mouseY, false, false) );
     wires.add( new SequenceWire(x_pressed, y_pressed,
-                                mouseX, mouseY, true) );
+                                mouseX, mouseY, false, false) );
+    // wires.add( new SequenceWire(x_pressed, y_pressed,
+    //                             mouseX, mouseY, true) );
     // wires.add( new Wire(x_pressed, y_pressed,
     //                             mouseX, mouseY) );
   }
