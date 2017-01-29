@@ -133,6 +133,7 @@ class SequenceWire extends Wire {
 
   //UI
   void mousePressed(int mX, int mY) {
+    super.mousePressed(mX, mY);
     if (dist(mX, mY, x_s, y_s) < _nodeDiameter/2) {
       trigger();
     }

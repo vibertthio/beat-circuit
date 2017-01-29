@@ -50,14 +50,16 @@ void draw() {
   }
 
   showfr();
-  debbug();
+  // debbug();
 }
 
 void mousePressed() {
   //test for background
   //back.trigger(mouseX, mouseY);
+  if (newLine) {
 
-  if (!newLine) {
+  }
+  else {
     for (int i=0; i<wires.size(); i++) {
       Wire w = wires.get(i);
       w.mousePressed(mouseX, mouseY);
@@ -74,9 +76,23 @@ void mouseReleased() {
     // wires.add( new Wire(x_pressed, y_pressed,
     //                             mouseX, mouseY) );
   }
-  if (newCircuit) {
+  else if (newCircuit) {
     circuit = new Circuit(x_pressed, y_pressed,
     mouseX, mouseY);
+  }
+  else {
+    for (int i=0; i<wires.size(); i++) {
+      Wire w = wires.get(i);
+      w.mouseReleased(mouseX, mouseY);
+    }
+  }
+}
+void mouseDragged() {
+  if (!newLine && !newCircuit) {
+    for (int i=0; i<wires.size(); i++) {
+      Wire w = wires.get(i);
+      w.mouseDragged(mouseX, mouseY);
+    }
   }
 }
 void keyPressed() {

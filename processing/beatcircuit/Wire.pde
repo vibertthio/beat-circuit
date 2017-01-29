@@ -18,7 +18,9 @@ class Wire {
   //state
   boolean angleAdjusting = true;
   boolean mousePointStartSensed = false;
-  boolean mousePointEndSensed = false; //true for start
+  boolean mousePointEndSensed = false;
+  boolean mousePointStartPressed = false;
+  boolean mousePointEndPressed = false;
 
   //time line para
   int timeUnit = 100;
@@ -28,13 +30,7 @@ class Wire {
   TimeLine timerOfAngleAdjusting;
 
   Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
-    x_s = _x_s;
-    y_s = _y_s;
-    x_e = _x_e;
-    y_e = _y_e;
-
-    angle = atan2(y_e - y_s, x_e - x_s);
-    length = dist(x_s, y_s, x_e, y_e);
+    updatePos(_x_s, _y_s, _x_e, _y_e);
     finalAngle = angleUnit * round(angle / angleUnit);
     // println("angle: " + angle);
     // println("final angle: " + finalAngle);
@@ -54,6 +50,7 @@ class Wire {
     if (angleAdjusting) {
       adjustAngle();
     }
+
   }
   void display() {
     mainWireDisplay();
@@ -70,6 +67,14 @@ class Wire {
       angle = finalAngle;
       angleAdjusting = false;
     }
+  }
+  void updatePos(float _x_s, float _y_s, float _x_e, float _y_e) {
+    x_s = _x_s;
+    y_s = _y_s;
+    x_e = _x_e;
+    y_e = _y_e;
+    angle = atan2(y_e - y_s, x_e - x_s);
+    length = dist(x_s, y_s, x_e, y_e);
   }
 
   //display functions
@@ -124,8 +129,27 @@ class Wire {
   void trigger() {}
 
   //UI
-  void mousePressed(int mX, int mY) {}
-  void mosueReleased(int mX, int mY) {}
+  void mousePressed(int mX, int mY) {
+    if( mousePointStartSensed ) {
+      mousePointStartPressed = true;
+    }
+    if( mousePointEndSensed ) {
+      mousePointEndPressed = true;
+    }
+
+  }
+  void mouseReleased(int mX, int mY) {
+    mousePointStartPressed = false;
+    mousePointEndPressed = false;
+  }
+  void mouseDragged(int mX, int mY) {
+    if (mousePointStartPressed) {
+      updatePos(mX, mY, x_e, y_e);
+    }
+    if (mousePointEndPressed) {
+      updatePos(x_s, y_s, mX, mY);
+    }
+  }
   void mouseSensed(int mX, int mY) {
     mousePointStartSensed = (dist(mX, mY, x_s, y_s) < _nodeDiameter / 2)? true:false;
     mousePointEndSensed = (dist(mX, mY, x_e, y_e) < _nodeDiameter / 2)? true:false;
