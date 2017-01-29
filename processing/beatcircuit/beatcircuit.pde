@@ -9,6 +9,7 @@ float x_pressed, y_pressed;
 
 //state
 boolean newLine = false;
+boolean newCircuit = false;
 
 Metro metro;
 int fc;
@@ -25,7 +26,7 @@ void setup() {
   wires.add( new SequenceWire(random(width), random(height),
                               random(width), random(height), true) );
 
-  metro = new Metro(true, 300);
+  metro = new Metro(true, 2000);
   fc = metro.frameCount();
   font = createFont("Courier", 12);
   textFont(font);
@@ -38,16 +39,18 @@ void draw() {
 
   for (int i=0; i<wires.size(); i++) {
     Wire w = wires.get(i);
+    w.mouseSensed(mouseX, mouseY);
     w.update();
     w.display();
   }
 
   if (circuit != null) {
+    circuit.mouseSensed(mouseX, mouseY);
     circuit.display();
   }
 
   showfr();
-  // debbug();
+  debbug();
 }
 
 void mousePressed() {
@@ -66,17 +69,22 @@ void mousePressed() {
 }
 void mouseReleased() {
   if (newLine) {
-    // wires.add( new SequenceWire(x_pressed, y_pressed,
-    //                             mouseX, mouseY, true) );
+    wires.add( new SequenceWire(x_pressed, y_pressed,
+                                mouseX, mouseY, true) );
     // wires.add( new Wire(x_pressed, y_pressed,
     //                             mouseX, mouseY) );
+  }
+  if (newCircuit) {
     circuit = new Circuit(x_pressed, y_pressed,
-                          mouseX, mouseY);
+    mouseX, mouseY);
   }
 }
 void keyPressed() {
   if(key == 'n') {
     newLine = true;
+  }
+  if(key == 'm') {
+    newCircuit = true;
   }
   if( key == ' ') {
     wires.clear();
@@ -85,6 +93,9 @@ void keyPressed() {
 void keyReleased() {
   if(key == 'n') {
     newLine = false;
+  }
+  if(key == 'm') {
+    newCircuit = false;
   }
 }
 

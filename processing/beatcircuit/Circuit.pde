@@ -59,5 +59,10 @@ class Circuit {
     }
   }
 
-
+  void mouseSensed(int mX, int mY) {
+    for (int i=0; i<wires.size(); i++) {
+      Wire w = wires.get(i);
+      w.mouseSensed(mX, mY);
+    }
+  }
 }

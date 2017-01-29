@@ -9,6 +9,7 @@ class Wire {
   float x_s, y_s, x_e, y_e;
   float angle, length;
   float finalAngle;
+  float angleUnit = PI / 4;
 
   //related wires
   ArrayList<Wire> prev;
@@ -16,6 +17,8 @@ class Wire {
 
   //state
   boolean angleAdjusting = true;
+  boolean mousePointStartSensed = false;
+  boolean mousePointEndSensed = false; //true for start
 
   //time line para
   int timeUnit = 100;
@@ -32,7 +35,7 @@ class Wire {
 
     angle = atan2(y_e - y_s, x_e - x_s);
     length = dist(x_s, y_s, x_e, y_e);
-    finalAngle = (PI / 2) * round(angle * 2 / PI);
+    finalAngle = angleUnit * round(angle / angleUnit);
     // println("angle: " + angle);
     // println("final angle: " + finalAngle);
 
@@ -45,7 +48,6 @@ class Wire {
     prev = new ArrayList<Wire>();
     next = new ArrayList<Wire>();
   }
-
 
   //main functions
   void update() {
@@ -85,11 +87,26 @@ class Wire {
     strokeWeight(_strokeWeight);
     fill(bk);
     float dia = _nodeDiameter * (1 + timerOfEndPoint.repeatBreathMovement() * 0.3);
+
+    if (mousePointStartSensed) {
+      stroke(255, 0, 0);
+    }
+    else {
+      stroke(_strokeColor);
+    }
     ellipse(x_s, y_s, dia, dia);
+
+    if (mousePointEndSensed) {
+      stroke(255, 0, 0);
+    }
+    else {
+      stroke(_strokeColor);
+    }
+    ellipse(x_e, y_e, dia, dia);
+
     // if (next.isEmpty()) {
     //   ellipse(x_e, y_e, dia, dia);
     // }
-    ellipse(x_e, y_e, dia, dia);
     popMatrix();
   }
   void triggerEndPoints() {
@@ -108,5 +125,10 @@ class Wire {
 
   //UI
   void mousePressed(int mX, int mY) {}
+  void mosueReleased(int mX, int mY) {}
+  void mouseSensed(int mX, int mY) {
+    mousePointStartSensed = (dist(mX, mY, x_s, y_s) < _nodeDiameter / 2)? true:false;
+    mousePointEndSensed = (dist(mX, mY, x_e, y_e) < _nodeDiameter / 2)? true:false;
+  }
 
 }

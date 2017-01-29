@@ -45,7 +45,7 @@ void draw() {
   // float r = timer.bounceInOut();
   // float r = timer.elasticIn();
   // float r = timer.elasticOut();
-  // float r = timer.elasticInOut();
+  float r = timer.elasticInOut();
 
   float x = iX + r * distance;
   noStroke();

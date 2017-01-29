@@ -123,8 +123,8 @@ class SequenceWire extends Wire {
       }
       else {
         // line(d*i, _barSignSize/2, d*i, -_barSignSize/2);
-        noStroke();
-        ellipse(d*i, 0, 3, 3);
+        // noStroke();
+        // ellipse(d*i, 0, 3, 3);
       }
     }
 
