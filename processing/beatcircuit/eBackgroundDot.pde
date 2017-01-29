@@ -93,8 +93,8 @@ class BackgroundClient {
 
   BackgroundClient() {
     eBackgroundDots = new eBackgroundDot[xNo][yNo];
-    maxTimer = new TimeLine(5000);
-    minTimer = new TimeLine(4000);
+    maxTimer = new TimeLine(2500);
+    minTimer = new TimeLine(2000);
     maxTimer.setLinerRate(1);
     minTimer.setLinerRate(1);
 
