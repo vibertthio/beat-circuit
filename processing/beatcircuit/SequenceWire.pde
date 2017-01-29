@@ -39,7 +39,6 @@ class SequenceWire extends Wire {
   void display() {
     super.display();
     barSignsDisplay();
-    // timeNodeDisplay();
     node.display();
   }
 
