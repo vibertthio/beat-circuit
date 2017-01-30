@@ -76,8 +76,9 @@ class eBackgroundDot {
 
 class BackgroundClient {
   eBackgroundDot[][] eBackgroundDots;
-  int xNo = 34;
-  int yNo = 20;
+  int scl = 30;
+  int xNo = width / scl;
+  int yNo = height / scl;
   float xCenter = 0;
   float yCenter = 0;
   float maxsize = width * 1.3;
