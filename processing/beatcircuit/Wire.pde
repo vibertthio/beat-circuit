@@ -30,22 +30,25 @@ class Wire {
   TimeLine timerOfEndPoint;
   TimeLine timerOfAngleAdjusting;
 
-  Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
+  Circuit circuit = null;
+
+  void init(float _x_s, float _y_s, float _x_e, float _y_e) {
     updatePos(_x_s, _y_s, _x_e, _y_e);
     finalAngle = angleUnit * round(angle / angleUnit);
     length = 0;
     finalLength = dist(_x_s, _y_s, _x_e, _y_e);
-    // println("angle: " + angle);
-    // println("final angle: " + finalAngle);
-
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     triggerEndPoints();
 
-    // timerOfAngleAdjusting = new TimeLine(timeUnit * 4);
-    // timerOfAngleAdjusting.startTimer();
-
     prev = new ArrayList<Wire>();
     next = new ArrayList<Wire>();
+  }
+  Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
+    init(_x_s, _y_s, _x_e, _y_e);
+  }
+  Wire(float _x_s, float _y_s, float _x_e, float _y_e, Circuit _c) {
+    init(_x_s, _y_s, _x_e, _y_e);
+    circuit = _c;
   }
 
   //main functions
@@ -73,6 +76,7 @@ class Wire {
     angle = angle + adjustingRate * (finalAngle - angle);
     x_e = x_s + length * cos(angle);
     y_e = y_s + length * sin(angle);
+    shiftNextWires(x_e, y_e);
     if (abs(angle - finalAngle) < 0.001) {
       angle = finalAngle;
       angleAdjusting = false;
@@ -100,7 +104,15 @@ class Wire {
     y_s = _y_s;
     x_e = x_s + length * cos(angle);
     y_e = y_s + length * sin(angle);
+    shiftNextWires(x_e, y_e);
   }
+  void shiftNextWires(float _x, float _y) {
+    for (int i=0; i<next.size(); i++) {
+      Wire w = next.get(i);
+      w.shiftPos(_x, _y);
+    }
+  }
+
 
   //display functions
   //and related utility
