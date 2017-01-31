@@ -23,13 +23,11 @@ class SequenceWire extends Wire {
     super(_x_s, _y_s, _x_e, _y_e);
     loop = _l;
     node = new Node(this);
-    node.timer.startTimer();
   }
-  SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l, boolean _s) {
-    super(_x_s, _y_s, _x_e, _y_e);
+  SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l, boolean _steady) {
+    super(_x_s, _y_s, _x_e, _y_e, _steady);
     loop = _l;
     node = new Node(this);
-    if (_s) { node.timer.startTimer(); }
   }
 
   void update() {

@@ -4,6 +4,7 @@ class Wire {
   color _strokeColor = color (1, 152, 117);
   float _nodeDiameter = 15;
   color _nodeColor = color(243, 156, 18);
+  color _detectedColor = color(214, 69, 65);
 
   //pos and angle
   float x_s, y_s, x_e, y_e;
@@ -16,15 +17,17 @@ class Wire {
   ArrayList<Wire> next;
 
   //state
+  boolean steady = false;
   boolean angleAdjusting = true;
   boolean lengthAdjusting = true;
   boolean mousePointStartSensed = false;
   boolean mousePointEndSensed = false;
   boolean mousePointStartPressed = false;
   boolean mousePointEndPressed = false;
+  boolean mouseWireSensed = false;
 
   //time line para
-  int timeUnit = 100;
+  int timeUnit = 25;
 
   //time tracking objects
   TimeLine timerOfEndPoint;
@@ -46,9 +49,9 @@ class Wire {
   Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
     init(_x_s, _y_s, _x_e, _y_e);
   }
-  Wire(float _x_s, float _y_s, float _x_e, float _y_e, Circuit _c) {
+  Wire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _steady) {
     init(_x_s, _y_s, _x_e, _y_e);
-    circuit = _c;
+    steady = _steady;
   }
 
   //main functions
@@ -100,11 +103,13 @@ class Wire {
     length = dist(x_s, y_s, x_e, y_e);
   }
   void shiftPos(float _x_s, float _y_s) {
-    x_s = _x_s;
-    y_s = _y_s;
-    x_e = x_s + length * cos(angle);
-    y_e = y_s + length * sin(angle);
-    shiftNextWires(x_e, y_e);
+    if (!steady) {
+      x_s = _x_s;
+      y_s = _y_s;
+      x_e = x_s + length * cos(angle);
+      y_e = y_s + length * sin(angle);
+      shiftNextWires(x_e, y_e);
+    }
   }
   void shiftNextWires(float _x, float _y) {
     for (int i=0; i<next.size(); i++) {
@@ -113,25 +118,28 @@ class Wire {
     }
   }
 
-
   //display functions
   //and related utility
   void mainWireDisplay() {
     pushMatrix();
-    stroke(_strokeColor);
+    if (!mouseWireSensed) {
+      stroke(_strokeColor);
+    }
+    else {
+      stroke(_detectedColor);
+    }
     strokeWeight(_strokeWeight);
     line(x_s, y_s, x_e, y_e);
     popMatrix();
   }
   void endPointsDisplay() {
     pushMatrix();
-    stroke(_strokeColor);
     strokeWeight(_strokeWeight);
     fill(bk);
     float dia = _nodeDiameter * (1 + timerOfEndPoint.repeatBreathMovement() * 0.3);
 
     if (mousePointStartSensed) {
-      stroke(255, 0, 0);
+      stroke(_detectedColor);
     }
     else {
       stroke(_strokeColor);
@@ -139,7 +147,7 @@ class Wire {
     ellipse(x_s, y_s, dia, dia);
 
     if (mousePointEndSensed) {
-      stroke(255, 0, 0);
+      stroke(_detectedColor);
     }
     else {
       stroke(_strokeColor);
@@ -191,18 +199,29 @@ class Wire {
       updatePos(x_s, y_s, mX, mY);
     }
   }
-  int mouseSensed(int mX, int mY) {
-    mousePointStartSensed = (dist(mX, mY, x_s, y_s) < _nodeDiameter / 2)? true:false;
-    mousePointEndSensed = (dist(mX, mY, x_e, y_e) < _nodeDiameter / 2)? true:false;
-    if (mousePointStartSensed) {
-      return 1;
-    }
-    else if (mousePointEndSensed) {
-      return 2;
+  void mouseSensed(int mX, int mY) {
+    float d1 = dist(mX, mY, x_s, y_s);
+    float d2 = dist(mX, mY, x_e, y_e);
+    mousePointStartSensed = (d1 < _nodeDiameter / 2)? true:false;
+    mousePointEndSensed = (d2 < _nodeDiameter / 2)? true:false;
+    if (!mousePointStartSensed && !mousePointEndSensed && (d1+d2 < length * 1.01)) {
+      mouseWireSensed = true;
     }
     else {
-      return 0;
+      mouseWireSensed = false;
     }
+    // if (mousePointStartSensed) {
+    //   return 1;
+    // }
+    // else if (mousePointEndSensed) {
+    //   return 2;
+    // }
+    // else if (mouseWireSensed) {
+    //   return 3;
+    // }
+    // else {
+    //   return 0;
+    // }
   }
 
 }
