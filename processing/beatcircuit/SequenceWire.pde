@@ -19,13 +19,13 @@ class SequenceWire extends Wire {
   Node node;
 
 
-  SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l) {
-    super(_x_s, _y_s, _x_e, _y_e);
+  SequenceWire(int _xs, int _ys, int _xe, int _ye, boolean _l) {
+    super(_xs, _ys, _xe, _ye);
     loop = _l;
     node = new Node(this);
   }
-  SequenceWire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _l, boolean _steady) {
-    super(_x_s, _y_s, _x_e, _y_e, _steady);
+  SequenceWire(int _xs, int _ys, int _xe, int _ye, boolean _l, boolean _steady) {
+    super(_xs, _ys, _xe, _ye);
     loop = _l;
     node = new Node(this);
   }
@@ -93,7 +93,7 @@ class SequenceWire extends Wire {
   //UI
   void mousePressed(int mX, int mY) {
     super.mousePressed(mX, mY);
-    if (dist(mX, mY, x_s, y_s) < _nodeDiameter/2) {
+    if (mousePointStartPressed) {
       trigger();
     }
   }

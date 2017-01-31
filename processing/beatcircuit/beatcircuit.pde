@@ -6,7 +6,9 @@ PFont font;
 BackgroundClient back;
 Circuit circuit;
 Circuit cc;
-float x_pressed, y_pressed;
+int x_pressed, y_pressed;
+int mX = 0, mY = 0;
+float cX, cY;
 
 //state
 boolean newLine = false;
@@ -19,7 +21,7 @@ void setup() {
   // size(1200, 800, P2D);
   size(1920, 1050, P2D);
   background(bk);
-
+  noCursor();
 
   //self define class
   back = new BackgroundClient();
@@ -29,22 +31,18 @@ void setup() {
   fc = metro.frameCount();
   font = createFont("Courier", 12);
   textFont(font);
-
-  //debbug
-  float x, y;
-  prev = cc.addSequenceWire( x = random(width), y = random(height),
-                     x + random(-200, 200), y + random(-200, 200));
 }
 
 void draw() {
   background(bk);
   back.display();
+  drawCursor();
 
-  cc.mouseSensed(mouseX, mouseY);
+  cc.mouseSensed(mX, mY);
   cc.display();
 
   if (circuit != null) {
-    circuit.mouseSensed(mouseX, mouseY);
+    circuit.mouseSensed(mX, mY);
     circuit.display();
   }
 
@@ -56,13 +54,13 @@ void mousePressed() {
   //test for background
   back.trigger(mouseX, mouseY);
   if (newLine || newCircuit) {
-    x_pressed = mouseX;
-    y_pressed = mouseY;
+    x_pressed = mX;
+    y_pressed = mY;
   }
   else {
-    cc.mousePressed(mouseX, mouseY);
+    cc.mousePressed(mX, mY);
     //test
-    if (circuit != null) circuit.mousePressed(mouseX, mouseY);
+    if (circuit != null) circuit.mousePressed(mX, mY);
   }
 }
 void mouseReleased() {
@@ -71,22 +69,22 @@ void mouseReleased() {
     //                             mouseX, mouseY) );
     // wires.add( new SequenceWire(x_pressed, y_pressed,
     //                             mouseX, mouseY, false, false) );
-    cc.addSequenceWire( x_pressed, y_pressed, mouseX, mouseY);
+    cc.addSequenceWire( x_pressed, y_pressed, mX, mY);
   }
   else if (newCircuit) {
-    cc.addShortedWire( x_pressed, y_pressed, mouseX, mouseY);
+    cc.addShortedWire( x_pressed, y_pressed, mX, mY);
     // circuit = new Circuit(x_pressed, y_pressed,
     // mouseX, mouseY);
   }
   else {
-    cc.mouseReleased(mouseX, mouseY);
-    if (circuit != null) circuit.mouseReleased(mouseX, mouseY);
+    cc.mouseReleased(mX, mY);
+    if (circuit != null) circuit.mouseReleased(mX, mY);
   }
 }
 void mouseDragged() {
   if (!newLine && !newCircuit) {
-    cc.mouseDragged(mouseX, mouseY);
-    if (circuit != null) circuit.mouseDragged(mouseX, mouseY);
+    cc.mouseDragged(mX, mY);
+    if (circuit != null) circuit.mouseDragged(mX, mY);
   }
 }
 void keyPressed() {
@@ -112,25 +110,38 @@ void keyReleased() {
 }
 
 //utility
+void drawCursor() {
+  mX = round(mouseX / scl);
+  mY = round(mouseY / scl);
+
+  cX = float(mX * scl) + 0.5 * (cX - float(mX * scl));
+  cY = float(mY * scl) + 0.5 * (cY - float(mY * scl));
+
+  noFill();
+  stroke(255);
+
+  ellipse(cX, cY, 10, 10);
+}
 void showfr() {
   fill(255);
   text( "frameRate: " + str(frameRate),10, 20);
 }
 
-Wire prev;
-void debbug() {
-  if(random(1) < 0.001) {
-    back.trigger(mouseX, mouseY);
-  }
 
-  if (fc < metro.frameCount()) {
-    fc = metro.frameCount();
-    // cc.addWire( random(width), random(height),
-    //             random(width), random(height));
-    prev = cc.addSequenceWire( prev.x_e, prev.y_e,
-                       prev.x_e + random(-200, 200), prev.y_e + random(-200, 200));
-  println("-------------------");
-  println("number of wires: " + cc.wires.size());
-  println("frame rate: " + frameRate);
-  }
-}
+// Wire prev;
+// void debbug() {
+//   if(random(1) < 0.001) {
+//     back.trigger(mouseX, mouseY);
+//   }
+//
+//   if (fc < metro.frameCount()) {
+//     fc = metro.frameCount();
+//     // cc.addWire( random(width), random(height),
+//     //             random(width), random(height));
+//     prev = cc.addSequenceWire( prev.x_e, prev.y_e,
+//                        prev.x_e + random(-200, 200), prev.y_e + random(-200, 200));
+//   println("-------------------");
+//   println("number of wires: " + cc.wires.size());
+//   println("frame rate: " + frameRate);
+//   }
+// }

@@ -3,8 +3,8 @@ class ShortedWire extends Wire {
 
   TimeLine timer;
 
-  ShortedWire(float _x_s, float _y_s, float _x_e, float _y_e) {
-    super(_x_s, _y_s, _x_e, _y_e);
+  ShortedWire(int _xs, int _ys, int _xe, int _ye) {
+    super(_xs, _ys, _xe, _ye);
     timer = new TimeLine(500);
   }
 
@@ -39,13 +39,5 @@ class ShortedWire extends Wire {
       w.trigger();
     }
   }
-
-
-
-
-
-
-
-
 
 }

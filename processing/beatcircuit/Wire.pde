@@ -7,7 +7,9 @@ class Wire {
   color _detectedColor = color(214, 69, 65);
 
   //pos and angle
+  int xs, ys, xe, ye;
   float x_s, y_s, x_e, y_e;
+
   float angle, length;
   float finalAngle, finalLength;
   float angleUnit = PI / 4;
@@ -35,22 +37,22 @@ class Wire {
 
   Circuit circuit = null;
 
-  void init(float _x_s, float _y_s, float _x_e, float _y_e) {
-    updatePos(_x_s, _y_s, _x_e, _y_e);
+  void init(int _xs, int _ys, int _xe, int _ye) {
+    updatePos(_xs, _ys, _xe, _ye);
     finalAngle = angleUnit * round(angle / angleUnit);
     length = 0;
-    finalLength = dist(_x_s, _y_s, _x_e, _y_e);
+    finalLength = dist(x_s, y_s, x_e, y_e);
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     triggerEndPoints();
 
     prev = new ArrayList<Wire>();
     next = new ArrayList<Wire>();
   }
-  Wire(float _x_s, float _y_s, float _x_e, float _y_e) {
-    init(_x_s, _y_s, _x_e, _y_e);
+  Wire(int _xs, int _ys, int _xe, int _ye) {
+    init(_xs, _ys, _xe, _ye);
   }
-  Wire(float _x_s, float _y_s, float _x_e, float _y_e, boolean _steady) {
-    init(_x_s, _y_s, _x_e, _y_e);
+  Wire(int _xs, int _ys, int _xe, int _ye, boolean _steady) {
+    init(_xs, _ys, _xe, _ye);
     steady = _steady;
   }
 
@@ -94,13 +96,22 @@ class Wire {
       lengthAdjusting = false;
     }
   }
-  void updatePos(float _x_s, float _y_s, float _x_e, float _y_e) {
-    x_s = _x_s;
-    y_s = _y_s;
-    x_e = _x_e;
-    y_e = _y_e;
+  void updatePos(int _xs, int _ys, int _xe, int _ye) {
+    xs = _xs;
+    ys = _ys;
+    xe = _xe;
+    ye = _ye;
+
+    x_s = xs * scl;
+    y_s = ys * scl;
+    x_e = xe * scl;
+    y_e = ye * scl;
+
     angle = atan2(y_e - y_s, x_e - x_s);
     length = dist(x_s, y_s, x_e, y_e);
+
+    println("xs:" + xs);
+    println("ys:" + ys);
   }
   void shiftPos(float _x_s, float _y_s) {
     if (!steady) {
@@ -176,6 +187,7 @@ class Wire {
   //UI
   void mousePressed(int mX, int mY) {
     if( mousePointStartSensed ) {
+      println("bang");
       mousePointStartPressed = true;
     }
     if( mousePointEndSensed ) {
@@ -196,20 +208,18 @@ class Wire {
       shiftPos(mX, mY);
     }
     if (mousePointEndPressed) {
-      updatePos(x_s, y_s, mX, mY);
+      updatePos(xs, ys, mX, mY);
     }
   }
   void mouseSensed(int mX, int mY) {
-    float d1 = dist(mX, mY, x_s, y_s);
-    float d2 = dist(mX, mY, x_e, y_e);
-    mousePointStartSensed = (d1 < _nodeDiameter / 2)? true:false;
-    mousePointEndSensed = (d2 < _nodeDiameter / 2)? true:false;
-    if (!mousePointStartSensed && !mousePointEndSensed && (d1+d2 < length * 1.01)) {
-      mouseWireSensed = true;
-    }
-    else {
+    mousePointStartSensed = (mX == xs && mY == ys)? true:false;
+    mousePointEndSensed = (mX == xe && mY == ye)? true:false;
+    // if (!mousePointStartSensed && !mousePointEndSensed && (d1+d2 < length * 1.01)) {
+    //   mouseWireSensed = true;
+    // }
+    // else {
       mouseWireSensed = false;
-    }
+    // }
     // if (mousePointStartSensed) {
     //   return 1;
     // }

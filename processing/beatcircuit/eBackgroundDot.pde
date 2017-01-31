@@ -93,15 +93,17 @@ class BackgroundClient {
 
   BackgroundClient() {
     eBackgroundDots = new eBackgroundDot[xNo][yNo];
-    maxTimer = new TimeLine(2500);
-    minTimer = new TimeLine(2000);
+    maxTimer = new TimeLine(5000);
+    minTimer = new TimeLine(4000);
     maxTimer.setLinerRate(1);
     minTimer.setLinerRate(1);
 
     for(int i = 0; i < xNo; i++) {
       for (int j = 0; j < yNo; j++) {
-        float x = map(i, 0, xNo-1, 0, width);
-        float y = map(j, 0, yNo-1, 0, height);
+        float x = i * 2 * scl;
+        float y = j * 2 * scl;
+        // float x = map(i, 0, xNo-1, 0, width);
+        // float y = map(j, 0, yNo-1, 0, height);
         eBackgroundDots[i][j] = new eBackgroundDot(x, y);
       }
     }
