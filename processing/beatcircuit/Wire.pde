@@ -20,6 +20,7 @@ class Wire {
 
   //state
   boolean steady = false;
+  boolean shifting = false;
   boolean posShifting = false;
   boolean endPosShifting = false;
   boolean angleAdjusting = false;
@@ -35,7 +36,6 @@ class Wire {
 
   //time tracking objects
   TimeLine timerOfEndPoint;
-  TimeLine timerOfAngleAdjusting;
 
   Circuit circuit = null;
 
@@ -70,13 +70,6 @@ class Wire {
     if (endPosShifting) {
       shiftEndPos();
     }
-    // if (lengthAdjusting) {
-    //   adjustLength();
-    // }
-    // if (angleAdjusting) {
-    //   adjustAngle();
-    // }
-
   }
   void display() {
     mainWireDisplay();
@@ -123,9 +116,6 @@ class Wire {
     ys = _ys;
     xe = _xe;
     ye = _ye;
-
-    // updateLength();
-    // updateAngle();
   }
   void shiftEndPos(int _xe, int _ye) {
     xe = _xe;
@@ -149,7 +139,8 @@ class Wire {
 
   }
   void shiftPos(int _xs, int _ys) {
-    if (!steady) {
+    if (!shifting) {
+      shifting = true;
       int dx = _xs - xs;
       int dy = _ys - ys;
       xs = _xs;
@@ -160,6 +151,7 @@ class Wire {
 
       posShifting = true;
       shiftNextWires(xe, ye);
+      shifting = false;
     }
   }
   void shiftPos() {
@@ -234,11 +226,16 @@ class Wire {
 
   //related wires functions
   void addNext(Wire w) {
-    next.add(w);
+    if (!next.contains(w)) {
+      next.add(w);
+    }
   }
   void addPrev(Wire w) {
-    prev.add(w);
+    if (!prev.contains(w)) {
+      prev.add(w);
+    }
   }
+  // void remove
   void trigger() {}
 
   //UI
@@ -251,16 +248,15 @@ class Wire {
     }
 
   }
-  void mouseReleased(int mX, int mY) {
-    if (mousePointEndPressed) {
-      // updateAngle();
-    }
+  boolean[] mouseReleased(int mX, int mY) {
+    boolean[] ret =  { mousePointStartPressed, mousePointEndPressed} ;
     mousePointStartPressed = false;
     mousePointEndPressed = false;
+
+    return ret;
   }
   void mouseDragged(int mX, int mY) {
     if (mousePointStartPressed) {
-      // updatePos(mX, mY, x_e, y_e);
       shiftPos(mX, mY);
     }
     if (mousePointEndPressed) {
@@ -270,24 +266,7 @@ class Wire {
   void mouseSensed(int mX, int mY) {
     mousePointStartSensed = (mX == xs && mY == ys)? true:false;
     mousePointEndSensed = (mX == xe && mY == ye)? true:false;
-    // if (!mousePointStartSensed && !mousePointEndSensed && (d1+d2 < length * 1.01)) {
-    //   mouseWireSensed = true;
-    // }
-    // else {
-      mouseWireSensed = false;
-    // }
-    // if (mousePointStartSensed) {
-    //   return 1;
-    // }
-    // else if (mousePointEndSensed) {
-    //   return 2;
-    // }
-    // else if (mouseWireSensed) {
-    //   return 3;
-    // }
-    // else {
-    //   return 0;
-    // }
+    mouseWireSensed = false;
   }
 
 }

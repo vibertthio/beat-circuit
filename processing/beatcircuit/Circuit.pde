@@ -64,9 +64,21 @@ class Circuit {
   void mouseReleased(int mX, int mY) {
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
-      w.mouseReleased(mX, mY);
+      boolean[] detect = w.mouseReleased(mX, mY);
+      if (detect[1]) {
+        println("get in");
+        for(int j=0; j<n; j++) {
+          Wire k = wires.get(j);
+          if (k.xs == mX && k.ys == mY) {
+            println("add");
+            w.addNext(k);
+            k.addPrev(w);
+          }
+        }
+      }
     }
   }
+
   void mouseDragged(int mX, int mY) {
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
@@ -87,25 +99,27 @@ class Circuit {
   }
 
   void addSequenceWire(int _xs, int _ys, int _xe, int _ye) {
+    Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       if (w.xe == _xs && w.ye == _ys) {
         // println("!!!!");
-        Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
-        w.addNext(w_new);
-        w_new.addPrev(w);
-        wires.add(w_new);
-        return ;
+        connect(w, w_new);
       }
     }
-
-    Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
     wires.add(w_new);
-    // return w_new;
 
-    // wires.add(new Wire(x_s, y_s, x_e, y_e));
+    for(int j=0; j<wires.size(); j++) {
+      Wire k = wires.get(j);
+      if (k.xs == mX && k.ys == mY) {
+        println("add");
+        connect(w_new, k);
+      }
+    }
   }
+
   void addShortedWire(int _xs, int _ys, int _xe, int _ye) {
+    boolean linked = false;
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       if (w.xe == _xs && w.ye == _ys) {
@@ -114,15 +128,16 @@ class Circuit {
         w.addNext(w_new);
         w_new.addPrev(w);
         wires.add(w_new);
-        return ;
+        linked = true ;
       }
     }
+    if (!linked) {
+      Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+      wires.add(w_new);
+    }
 
-    Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
-    wires.add(w_new);
-    // return w_new;
 
-    // wires.add(new Wire(x_s, y_s, x_e, y_e));
+
   }
 
   void removeWire(int mX, int mY) {
@@ -137,4 +152,9 @@ class Circuit {
   void clearWires() {
     wires.clear();
   }
+}
+
+void connect(Wire p, Wire n) {
+  p.addNext(n);
+  n.addPrev(p);
 }

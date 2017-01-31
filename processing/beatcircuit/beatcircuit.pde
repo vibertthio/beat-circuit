@@ -4,7 +4,6 @@ final color bk = color(30, 30, 30);
 PFont font;
 
 BackgroundClient back;
-Circuit circuit;
 Circuit cc;
 int x_pressed, y_pressed;
 int mX = 0, mY = 0;
@@ -18,6 +17,7 @@ boolean newCircuit = false;
 
 Metro metro;
 int fc;
+float zoom = 1;
 
 void setup() {
   // size(1200, 800, P2D);
@@ -34,8 +34,8 @@ void setup() {
   font = createFont("Courier", 12);
   textFont(font);
 }
-
 void draw() {
+  scale(zoom);
   background(bk);
   back.display();
   drawCursor();
@@ -43,10 +43,6 @@ void draw() {
   cc.mouseSensed(mX, mY);
   cc.display();
 
-  if (circuit != null) {
-    circuit.mouseSensed(mX, mY);
-    circuit.display();
-  }
 
   showfr();
   // debbug();
@@ -54,7 +50,7 @@ void draw() {
 
 void mousePressed() {
   //test for background
-  back.trigger(mouseX, mouseY);
+  back.trigger(mX * scl, mY * scl);
   if (newLine || newCircuit) {
     x_pressed = mX;
     y_pressed = mY;
@@ -64,32 +60,22 @@ void mousePressed() {
   }
   else {
     cc.mousePressed(mX, mY);
-    //test
-    if (circuit != null) circuit.mousePressed(mX, mY);
   }
 }
 void mouseReleased() {
   if (newLine) {
-    // wires.add( new Wire(x_pressed, y_pressed,
-    //                             mouseX, mouseY) );
-    // wires.add( new SequenceWire(x_pressed, y_pressed,
-    //                             mouseX, mouseY, false, false) );
     cc.addSequenceWire( x_pressed, y_pressed, mX, mY);
   }
   else if (newCircuit) {
     cc.addShortedWire( x_pressed, y_pressed, mX, mY);
-    // circuit = new Circuit(x_pressed, y_pressed,
-    // mouseX, mouseY);
   }
   else {
     cc.mouseReleased(mX, mY);
-    if (circuit != null) circuit.mouseReleased(mX, mY);
   }
 }
 void mouseDragged() {
   if (!newLine && !newCircuit) {
     cc.mouseDragged(mX, mY);
-    if (circuit != null) circuit.mouseDragged(mX, mY);
   }
 }
 void keyPressed() {
@@ -105,8 +91,15 @@ void keyPressed() {
 
   if( key == ' ') {
     cc.clearWires();
-    circuit = null;
   }
+
+  if (key == 'a') {
+     zoom += 0.05;
+   }
+   else if (key == 'z') {
+     zoom -= 0.05;
+ }
+ zoom = constrain(zoom,0,100);
 }
 void keyReleased() {
   if(key == 'n') {
@@ -136,6 +129,7 @@ void drawCursor() {
 void showfr() {
   fill(255);
   text( "frameRate: " + str(frameRate),10, 20);
+  text( "zoom rate: " + str(zoom),10, 30);
 }
 
 
