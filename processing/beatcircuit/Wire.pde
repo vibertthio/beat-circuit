@@ -21,6 +21,7 @@ class Wire {
   //state
   boolean steady = false;
   boolean posShifting = false;
+  boolean endPosShifting = false;
   boolean angleAdjusting = false;
   boolean lengthAdjusting = true;
   boolean mousePointStartSensed = false;
@@ -42,9 +43,11 @@ class Wire {
     updatePos(_xs, _ys, _xe, _ye);
     x_s = xs * scl;
     y_s = ys * scl;
-    angle = finalAngle;
-    length = 0;
-    // updateLength();
+    x_e = x_s;
+    y_e = y_s;
+
+    angle = atan2((ye - ys)*scl, (xe - xs)*scl);
+    shiftEndPos(_xe, _ye);
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     triggerEndPoints();
 
@@ -64,12 +67,15 @@ class Wire {
     if (posShifting) {
       shiftPos();
     }
-    if (lengthAdjusting) {
-      adjustLength();
+    if (endPosShifting) {
+      shiftEndPos();
     }
-    if (angleAdjusting) {
-      adjustAngle();
-    }
+    // if (lengthAdjusting) {
+    //   adjustLength();
+    // }
+    // if (angleAdjusting) {
+    //   adjustAngle();
+    // }
 
   }
   void display() {
@@ -118,23 +124,60 @@ class Wire {
     xe = _xe;
     ye = _ye;
 
-    updateLength();
-    updateAngle();
+    // updateLength();
+    // updateAngle();
+  }
+  void shiftEndPos(int _xe, int _ye) {
+    xe = _xe;
+    ye = _ye;
+    endPosShifting = true;
+  }
+  void shiftEndPos() {
+    float xd = float(xe * scl);
+    float yd = float(ye * scl);
+    float dx = adjustingRate * (xd - x_e);
+    float dy = adjustingRate * (yd - y_e);
+    x_e = x_e + dx;
+    y_e = y_e + dy;
+    if (dist(xd, yd, x_e, y_e) < 0.1) {
+      x_e = xd;
+      y_e = yd;
+      endPosShifting = false;
+    }
+    angle = atan2(y_e - y_s, x_e - x_s);
+    length = dist(x_s, y_s, x_e, y_e);
+
   }
   void shiftPos(int _xs, int _ys) {
     if (!steady) {
       int dx = _xs - xs;
       int dy = _ys - ys;
-      updatePos(xs+dx, ys+dy, xe+dx, ye+dy);
+      xs = _xs;
+      ys = _ys;
+      xe = xe + dx;
+      ye = ye + dy;
+      // shiftEndPos(xe + dx, ye + dy);
+
       posShifting = true;
-      shiftNextWires(ys, ye);
+      shiftNextWires(xe, ye);
     }
   }
   void shiftPos() {
-    x_s = x_s + adjustingRate * (float(xs * scl) - x_s);
-    y_s = y_s + adjustingRate * (float(ys * scl) - y_s);
-    x_e = x_s + length * cos(angle);
-    y_e = y_s + length * sin(angle);
+    float xd = float(xs * scl);
+    float yd = float(ys * scl);
+    float dx = adjustingRate * (xd - x_s);
+    float dy = adjustingRate * (yd - y_s);
+    x_s = x_s + dx;
+    y_s = y_s + dy;
+    x_e = x_e + dx;
+    y_e = y_e + dy;
+    if (dist(xd, yd, x_s, y_s) < 0.1) {
+      x_s = xd;
+      y_s = yd;
+      x_e = xe * scl;
+      y_e = ye * scl;
+      posShifting = false;
+    }
   }
   void shiftNextWires(int _x, int _y) {
     for (int i=0; i<next.size(); i++) {
@@ -221,7 +264,7 @@ class Wire {
       shiftPos(mX, mY);
     }
     if (mousePointEndPressed) {
-      updatePos(xs, ys, mX, mY);
+      shiftEndPos(mX, mY);
     }
   }
   void mouseSensed(int mX, int mY) {

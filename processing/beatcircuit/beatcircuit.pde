@@ -12,7 +12,9 @@ float cX, cY;
 
 //state
 boolean newLine = false;
+boolean removeLine = false;
 boolean newCircuit = false;
+
 
 Metro metro;
 int fc;
@@ -57,6 +59,9 @@ void mousePressed() {
     x_pressed = mX;
     y_pressed = mY;
   }
+  else if (removeLine) {
+    cc.removeWire(mX, mY);
+  }
   else {
     cc.mousePressed(mX, mY);
     //test
@@ -94,6 +99,9 @@ void keyPressed() {
   if(key == 'm') {
     newCircuit = true;
   }
+  if(key == 'r') {
+    removeLine = true;
+  }
 
   if( key == ' ') {
     cc.clearWires();
@@ -106,6 +114,9 @@ void keyReleased() {
   }
   if(key == 'm') {
     newCircuit = false;
+  }
+  if(key == 'r') {
+    removeLine = false;
   }
 }
 

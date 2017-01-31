@@ -86,57 +86,53 @@ class Circuit {
     }
   }
 
-  Wire addSequenceWire(int x_s, int y_s, int x_e, int y_e) {
-    // for (int i=0, n=wires.size(); i<n; i++) {
-    //   Wire w = wires.get(i);
-    //   w.mouseSensed(int(x_s), int(y_s));
-    //   if (w.mousePointEndSensed) {
-    //     println("!!!!");
-    //     Wire w_new = new SequenceWire(w.x_e, w.y_e, x_e, y_e, false, false);
-    //     w.addNext(w_new);
-    //     w_new.addPrev(w);
-    //     wires.add(w_new);
-    //     return w_new;
-    //   }
-    // }
+  void addSequenceWire(int _xs, int _ys, int _xe, int _ye) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      if (w.xe == _xs && w.ye == _ys) {
+        // println("!!!!");
+        Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
+        w.addNext(w_new);
+        w_new.addPrev(w);
+        wires.add(w_new);
+        return ;
+      }
+    }
 
-    Wire w_new = new SequenceWire(x_s, y_s, x_e, y_e, false, false);
+    Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
     wires.add(w_new);
-    return w_new;
+    // return w_new;
 
     // wires.add(new Wire(x_s, y_s, x_e, y_e));
-
-    // wires.add(
-    //   connected?
-    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false, false):
-    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, true)
-    // );
   }
-  Wire addShortedWire(int _xs, int _ys, int _xe, int _ye) {
-    // for (int i=0, n=wires.size(); i<n; i++) {
-    //   Wire w = wires.get(i);
-    //   w.mouseSensed(int(x_s), int(y_s));
-    //   if (w.mousePointEndSensed) {
-    //     println("!!!!");
-    //     Wire w_new = new ShortedWire(w.x_e, w.y_e, x_e, y_e);
-    //     w.addNext(w_new);
-    //     w_new.addPrev(w);
-    //     wires.add(w_new);
-    //     return w_new;
-    //   }
-    // }
+  void addShortedWire(int _xs, int _ys, int _xe, int _ye) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      if (w.xe == _xs && w.ye == _ys) {
+        // println("!!!!");
+        Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+        w.addNext(w_new);
+        w_new.addPrev(w);
+        wires.add(w_new);
+        return ;
+      }
+    }
 
     Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
     wires.add(w_new);
-    return w_new;
+    // return w_new;
 
     // wires.add(new Wire(x_s, y_s, x_e, y_e));
+  }
 
-    // wires.add(
-    //   connected?
-    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, false, false):
-    //   new SequenceWire(x_pressed, y_pressed, mouseX, mouseY, true)
-    // );
+  void removeWire(int mX, int mY) {
+    for (int i=0, n=wires.size(); i<n; i++) {
+      Wire w = wires.get(i);
+      if (w.xs == mX && w.ys == mY) {
+        wires.remove(i);
+        return;
+      }
+    }
   }
   void clearWires() {
     wires.clear();
