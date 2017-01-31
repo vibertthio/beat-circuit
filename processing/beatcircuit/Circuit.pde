@@ -65,13 +65,19 @@ class Circuit {
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       boolean[] detect = w.mouseReleased(mX, mY);
-      if (detect[1]) {
+      if (detect[0]) {
         for(int j=0; j<n; j++) {
           Wire k = wires.get(j);
-          if (k.xs == mX && k.ys == mY) {
-            // println("add");
-            w.addNext(k);
-            k.addPrev(w);
+          if (k.xe == mX && k.ye == mY) {
+            connect(k, w);
+          }
+        }
+      }
+      if (detect[0] || detect[1]) {
+        for(int j=0; j<n; j++) {
+          Wire k = wires.get(j);
+          if (k.xs == w.xe && k.ys == w.ye) {
+            connect(w, k);
           }
         }
       }
@@ -183,9 +189,4 @@ class Circuit {
   void clearWires() {
     wires.clear();
   }
-}
-
-void connect(Wire p, Wire n) {
-  p.addNext(n);
-  n.addPrev(p);
 }

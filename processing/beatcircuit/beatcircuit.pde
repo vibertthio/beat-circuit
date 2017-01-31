@@ -131,6 +131,10 @@ void showfr() {
   text( "frameRate: " + str(frameRate),10, 20);
   text( "zoom rate: " + str(zoom),10, 30);
 }
+void connect(Wire p, Wire n) {
+  p.addNext(n);
+  n.addPrev(p);
+}
 
 
 // Wire prev;
