@@ -12,7 +12,7 @@ class Wire {
 
   float angle, length;
   float finalAngle, finalLength;
-  float angleUnit = PI / 4;
+  // float angleUnit = PI / 4;
 
   //related wires
   ArrayList<Wire> prev;
@@ -20,7 +20,8 @@ class Wire {
 
   //state
   boolean steady = false;
-  boolean angleAdjusting = true;
+  boolean posShifting = false;
+  boolean angleAdjusting = false;
   boolean lengthAdjusting = true;
   boolean mousePointStartSensed = false;
   boolean mousePointEndSensed = false;
@@ -39,9 +40,11 @@ class Wire {
 
   void init(int _xs, int _ys, int _xe, int _ye) {
     updatePos(_xs, _ys, _xe, _ye);
-    finalAngle = angleUnit * round(angle / angleUnit);
+    x_s = xs * scl;
+    y_s = ys * scl;
+    angle = finalAngle;
     length = 0;
-    finalLength = dist(x_s, y_s, x_e, y_e);
+    // updateLength();
     timerOfEndPoint = new TimeLine(timeUnit / 2);
     triggerEndPoints();
 
@@ -58,10 +61,13 @@ class Wire {
 
   //main functions
   void update() {
+    if (posShifting) {
+      shiftPos();
+    }
     if (lengthAdjusting) {
       adjustLength();
     }
-    else if (angleAdjusting) {
+    if (angleAdjusting) {
       adjustAngle();
     }
 
@@ -75,17 +81,27 @@ class Wire {
   float adjustingRate = 0.2;
   void updateAngle() {
     angleAdjusting = true;
-    finalAngle = angleUnit * round(angle / angleUnit);
+    float a = atan2((ye - ys)*scl, (xe - xs)*scl);
+    float threshold = PI / 4;
+    if (abs(angle - PI) < threshold && a < 0) { angle -= 2 * PI; }
+    else if (abs(angle + PI) < threshold && a > 0) { angle += 2 * PI; }
+    finalAngle = a;
+    println("current angle: " + angle);
+    println("target angle: " + finalAngle);
   }
   void adjustAngle() {
     angle = angle + adjustingRate * (finalAngle - angle);
     x_e = x_s + length * cos(angle);
     y_e = y_s + length * sin(angle);
-    shiftNextWires(x_e, y_e);
+    shiftNextWires(xe, ye);
     if (abs(angle - finalAngle) < 0.001) {
       angle = finalAngle;
       angleAdjusting = false;
     }
+  }
+  void updateLength() {
+    lengthAdjusting = true;
+    finalLength = dist(xs * scl, ys * scl, xe * scl, ye * scl);
   }
   void adjustLength() {
     length = length + adjustingRate * (finalLength - length);
@@ -102,27 +118,25 @@ class Wire {
     xe = _xe;
     ye = _ye;
 
-    x_s = xs * scl;
-    y_s = ys * scl;
-    x_e = xe * scl;
-    y_e = ye * scl;
-
-    angle = atan2(y_e - y_s, x_e - x_s);
-    length = dist(x_s, y_s, x_e, y_e);
-
-    println("xs:" + xs);
-    println("ys:" + ys);
+    updateLength();
+    updateAngle();
   }
-  void shiftPos(float _x_s, float _y_s) {
+  void shiftPos(int _xs, int _ys) {
     if (!steady) {
-      x_s = _x_s;
-      y_s = _y_s;
-      x_e = x_s + length * cos(angle);
-      y_e = y_s + length * sin(angle);
-      shiftNextWires(x_e, y_e);
+      int dx = _xs - xs;
+      int dy = _ys - ys;
+      updatePos(xs+dx, ys+dy, xe+dx, ye+dy);
+      posShifting = true;
+      shiftNextWires(ys, ye);
     }
   }
-  void shiftNextWires(float _x, float _y) {
+  void shiftPos() {
+    x_s = x_s + adjustingRate * (float(xs * scl) - x_s);
+    y_s = y_s + adjustingRate * (float(ys * scl) - y_s);
+    x_e = x_s + length * cos(angle);
+    y_e = y_s + length * sin(angle);
+  }
+  void shiftNextWires(int _x, int _y) {
     for (int i=0; i<next.size(); i++) {
       Wire w = next.get(i);
       w.shiftPos(_x, _y);
@@ -187,7 +201,6 @@ class Wire {
   //UI
   void mousePressed(int mX, int mY) {
     if( mousePointStartSensed ) {
-      println("bang");
       mousePointStartPressed = true;
     }
     if( mousePointEndSensed ) {
@@ -197,7 +210,7 @@ class Wire {
   }
   void mouseReleased(int mX, int mY) {
     if (mousePointEndPressed) {
-      updateAngle();
+      // updateAngle();
     }
     mousePointStartPressed = false;
     mousePointEndPressed = false;
