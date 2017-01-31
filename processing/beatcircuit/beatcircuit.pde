@@ -64,10 +64,10 @@ void mousePressed() {
 }
 void mouseReleased() {
   if (newLine) {
-    cc.addSequenceWire( x_pressed, y_pressed, mX, mY);
+    cc.addWire(1, x_pressed, y_pressed, mX, mY);
   }
   else if (newCircuit) {
-    cc.addShortedWire( x_pressed, y_pressed, mX, mY);
+    cc.addWire(2, x_pressed, y_pressed, mX, mY);
   }
   else {
     cc.mouseReleased(mX, mY);

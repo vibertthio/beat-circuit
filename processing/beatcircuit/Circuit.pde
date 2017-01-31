@@ -66,11 +66,10 @@ class Circuit {
       Wire w = wires.get(i);
       boolean[] detect = w.mouseReleased(mX, mY);
       if (detect[1]) {
-        println("get in");
         for(int j=0; j<n; j++) {
           Wire k = wires.get(j);
           if (k.xs == mX && k.ys == mY) {
-            println("add");
+            // println("add");
             w.addNext(k);
             k.addPrev(w);
           }
@@ -98,12 +97,41 @@ class Circuit {
     }
   }
 
-  void addSequenceWire(int _xs, int _ys, int _xe, int _ye) {
-    Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
+  // void addSequenceWire(int _xs, int _ys, int _xe, int _ye) {
+  //   Wire w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
+  //   for (int i=0, n=wires.size(); i<n; i++) {
+  //     Wire w = wires.get(i);
+  //     if (w.xe == _xs && w.ye == _ys) {
+  //       // println("!!!!");
+  //       connect(w, w_new);
+  //     }
+  //   }
+  //   wires.add(w_new);
+  //
+  //   for(int j=0; j<wires.size(); j++) {
+  //     Wire k = wires.get(j);
+  //     if (k.xs == mX && k.ys == mY) {
+  //       println("add");
+  //       connect(w_new, k);
+  //     }
+  //   }
+  // }
+  void addWire(int type, int _xs, int _ys, int _xe, int _ye) {
+    Wire w_new;
+    switch(type) {
+      case 1 :
+        w_new = new SequenceWire(_xs, _ys, _xe, _ye, false, false);
+        break;
+      case 2 :
+        w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+        break;
+      default :
+        w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+    }
+
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       if (w.xe == _xs && w.ye == _ys) {
-        // println("!!!!");
         connect(w, w_new);
       }
     }
@@ -112,38 +140,41 @@ class Circuit {
     for(int j=0; j<wires.size(); j++) {
       Wire k = wires.get(j);
       if (k.xs == mX && k.ys == mY) {
-        println("add");
         connect(w_new, k);
       }
     }
   }
 
-  void addShortedWire(int _xs, int _ys, int _xe, int _ye) {
-    boolean linked = false;
-    for (int i=0, n=wires.size(); i<n; i++) {
-      Wire w = wires.get(i);
-      if (w.xe == _xs && w.ye == _ys) {
-        // println("!!!!");
-        Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
-        w.addNext(w_new);
-        w_new.addPrev(w);
-        wires.add(w_new);
-        linked = true ;
-      }
-    }
-    if (!linked) {
-      Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
-      wires.add(w_new);
-    }
-
-
-
-  }
+  // void addShortedWire(int _xs, int _ys, int _xe, int _ye) {
+  //   boolean linked = false;
+  //   for (int i=0, n=wires.size(); i<n; i++) {
+  //     Wire w = wires.get(i);
+  //     if (w.xe == _xs && w.ye == _ys) {
+  //       // println("!!!!");
+  //       Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+  //       w.addNext(w_new);
+  //       w_new.addPrev(w);
+  //       wires.add(w_new);
+  //       linked = true ;
+  //     }
+  //   }
+  //   if (!linked) {
+  //     Wire w_new = new ShortedWire(_xs, _ys, _xe, _ye);
+  //     wires.add(w_new);
+  //   }
+  //
+  //
+  //
+  // }
 
   void removeWire(int mX, int mY) {
     for (int i=0, n=wires.size(); i<n; i++) {
       Wire w = wires.get(i);
       if (w.xs == mX && w.ys == mY) {
+        for(int j=0; j<n; j++) {
+          Wire k = wires.get(j);
+          k.removeWire(w);
+        }
         wires.remove(i);
         return;
       }

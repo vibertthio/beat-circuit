@@ -123,20 +123,22 @@ class Wire {
     endPosShifting = true;
   }
   void shiftEndPos() {
-    float xd = float(xe * scl);
-    float yd = float(ye * scl);
-    float dx = adjustingRate * (xd - x_e);
-    float dy = adjustingRate * (yd - y_e);
-    x_e = x_e + dx;
-    y_e = y_e + dy;
-    if (dist(xd, yd, x_e, y_e) < 0.1) {
-      x_e = xd;
-      y_e = yd;
-      endPosShifting = false;
-    }
-    angle = atan2(y_e - y_s, x_e - x_s);
-    length = dist(x_s, y_s, x_e, y_e);
+    if (!shifting || prev.isEmpty()) {
+      float xd = float(xe * scl);
+      float yd = float(ye * scl);
+      float dx = adjustingRate * (xd - x_e);
+      float dy = adjustingRate * (yd - y_e);
+      x_e = x_e + dx;
+      y_e = y_e + dy;
+      if (dist(xd, yd, x_e, y_e) < 0.1) {
+        x_e = xd;
+        y_e = yd;
+        endPosShifting = false;
+      }
+      angle = atan2(y_e - y_s, x_e - x_s);
+      length = dist(x_s, y_s, x_e, y_e);
 
+    }
   }
   void shiftPos(int _xs, int _ys) {
     if (!shifting) {
@@ -147,7 +149,6 @@ class Wire {
       ys = _ys;
       xe = xe + dx;
       ye = ye + dy;
-      // shiftEndPos(xe + dx, ye + dy);
 
       posShifting = true;
       shiftNextWires(xe, ye);
@@ -235,7 +236,10 @@ class Wire {
       prev.add(w);
     }
   }
-  // void remove
+  void removeWire(Wire w) {
+    if (prev.contains(w)) { prev.remove(w); }
+    if (next.contains(w)) { next.remove(w); }
+  }
   void trigger() {}
 
   //UI
