@@ -86,8 +86,8 @@ class Wire {
     if (abs(angle - PI) < threshold && a < 0) { angle -= 2 * PI; }
     else if (abs(angle + PI) < threshold && a > 0) { angle += 2 * PI; }
     finalAngle = a;
-    println("current angle: " + angle);
-    println("target angle: " + finalAngle);
+    // println("current angle: " + angle);
+    // println("target angle: " + finalAngle);
   }
   void adjustAngle() {
     angle = angle + adjustingRate * (finalAngle - angle);
