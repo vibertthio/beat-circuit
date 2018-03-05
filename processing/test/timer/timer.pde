@@ -3,7 +3,7 @@ final color col = color(224, 130, 131);
 PFont font;
 
 void setup() {
-  size(1500, 300);
+  size(1000, 300);
   background(30);
   font = createFont("Courier", 18);
   textFont(font);
@@ -29,7 +29,7 @@ void draw() {
   }
   // float r = timer.liner();
   // float r = timer.getPowIn(2.5);
-  // float r = timer.getPowOut(3);
+  float r = timer.getPowOut(3);
   // float r = timer.getPowInOut(3);
   // float r = timer.sineIn();
   // float r = timer.sineOut();
@@ -45,7 +45,7 @@ void draw() {
   // float r = timer.bounceInOut();
   // float r = timer.elasticIn();
   // float r = timer.elasticOut();
-  float r = timer.elasticInOut();
+  // float r = timer.elasticInOut();
 
   float x = iX + r * distance;
   noStroke();
